@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">hustBillbook</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_generateChart">Chart</string>
+    <string name="TitleHint">Title</string>
+    <string name="MoneyHint">Money</string>
+</resources>
