@@ -1,13 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/chart"
-        android:padding="20dp"
-        android:layout_width = "match_parent"
-        android:layout_height="match_parent"/>
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:background="?attr/colorPrimary">
+        <RelativeLayout
+            android:id="@+id/selector_layout"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true">
+            <TextView
+                android:id="@+id/tv_week_chart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="日"
+                android:textSize="15sp"
+                android:background="@drawable/tv_week_selector"
+                android:textColor="@drawable/tv_text_selector" />
+            <TextView
+                android:id="@+id/tv_month_chart"
+                android:layout_toRightOf="@id/tv_week_chart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="月"
+                android:textSize="15sp"
+                android:background="@drawable/tv_month_selector"
+                android:textColor="@drawable/tv_text_selector" />
+            <TextView
+                android:id="@+id/tv_year_chart"
+                android:layout_toRightOf="@id/tv_month_chart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="年"
+                android:textSize="15sp"
+                android:background="@drawable/tv_year_selector"
+                android:textColor="@drawable/tv_text_selector" />
+        </RelativeLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_below="@id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/linechart"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"/>
+        <LinearLayout
+            android:id="@+id/layout_type_data"
+            android:layout_below="@id/linechart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="支出排行榜"
+                android:textSize="15sp"
+                android:paddingLeft="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingLeft="10dp">
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

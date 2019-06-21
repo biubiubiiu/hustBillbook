@@ -42,7 +42,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // 查询一条记录
-    public Cursor getAllCostData() {
+    public Cursor getAllRecords() {
         SQLiteDatabase database = getWritableDatabase();
         // SELECT * FROM record_table ORDER BY record_date ASC
         return database.query(RECORD_TABLE,
@@ -55,9 +55,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // 删除record_table数据表
-    public void deleteDatabase() {
+    public void deleteAllRecords() {
         SQLiteDatabase database = getWritableDatabase();
         database.delete(RECORD_TABLE, null, null);
+    }
+
+    // 删除数据库中的一条记录
+    public void deleteOneRecord(int id) {
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL("DELETE FROM " + RECORD_TABLE + " WHERE inc_id= " + id);
     }
 
     @Override

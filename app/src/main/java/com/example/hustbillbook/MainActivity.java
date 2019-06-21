@@ -6,16 +6,18 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -46,6 +48,27 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RecordListAdaptor(this, mRecordBeanList);
         recordList.setAdapter(mAdapter);
 
+        // 单击ListView中元素删除记录
+        recordList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Delete Record");
+                builder.setMessage("Are you sure to delete the record?");
+                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mDataBaseHelper.deleteOneRecord(position);
+                        mRecordBeanList.remove(position);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.create().show();
+            }
+        });
+
+        // 添加新记录
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     // 设置回调事件
                     @Override
                     // 将新数据插入到数据库中
+                    // TODO：输入有效性检查
                     public void onClick(DialogInterface dialogInterface, int i) {
                         RecordBean recordBean = new RecordBean();
                         recordBean.recordTitle = title.getText().toString();
@@ -85,16 +109,17 @@ public class MainActivity extends AppCompatActivity {
                 builder.create().show();
             }
         });
+
     }
 
     // 【测试用】生成假数据并插入到数据库中
     private void initTestData() {
-        // 先清空数据表中的数据
-        mDataBaseHelper.deleteDatabase();
+        // 清空数据表中的数据
+        mDataBaseHelper.deleteAllRecords();
         // 生成假数据
         for (int i = 0; i < 2; i++) {
             RecordBean recordBean = new RecordBean();
-            recordBean.recordDate = "6-19";
+            recordBean.recordDate = "2019-6-19";
             recordBean.recordTitle = "test" + i;
             recordBean.recordMoney = "1000";
             //            mRecordBeanList.add(recordBean；
@@ -102,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             mDataBaseHelper.insertRecord(recordBean);
         }
         // 通过数据库将查询数据，插入到List容器中
-        Cursor cursor = mDataBaseHelper.getAllCostData();
+        Cursor cursor = mDataBaseHelper.getAllRecords();
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 RecordBean recordBean = new RecordBean();
@@ -142,5 +167,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    // 在主页点击返回键后提示退出
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Quit")
+                .setMessage("Are you sure to quit")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).setNegativeButton("Cancel", null);
+        builder.create().show();
     }
 }
