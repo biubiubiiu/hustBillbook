@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.hustbillbook.bean.RecordBean;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     // 数据表header

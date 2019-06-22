@@ -1,6 +1,9 @@
-package com.example.hustbillbook;
+package com.example.hustbillbook.activity;
 
-import com.example.hustbillbook.Utils.CalenderUtils;
+import com.example.hustbillbook.R;
+import com.example.hustbillbook.SingleCommonData;
+import com.example.hustbillbook.bean.RecordBean;
+import com.example.hustbillbook.tools.CalenderUtils;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -10,7 +13,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +54,7 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
 
         mChart = findViewById(R.id.linechart);
         mData = new LineChartData();
-        List<RecordBean> allData = (List<RecordBean>) getIntent().getSerializableExtra("record_list");
+//        List<RecordBean> allData = (List<RecordBean>) getIntent().getSerializableExtra("record_list");
         lines = new ArrayList<>();
         values = new ArrayList<>();
         mAxisXValues = new ArrayList<>();
@@ -64,11 +66,19 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
         weekTv.setOnClickListener(this);
         monthTv.setOnClickListener(this);
         yearTv.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        List<RecordBean> allData = SingleCommonData.getRecordList();
 
         weekTv.setSelected(true);
         currentPage = Page.Week;
         generateValue(allData);
         generateWeekChart();
+
+        Log.d("chart", "chart activity started!");
     }
 
     // 对数据进行初步处理

@@ -1,4 +1,4 @@
-package com.example.hustbillbook;
+package com.example.hustbillbook.adaptor;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.hustbillbook.R;
+import com.example.hustbillbook.bean.RecordBean;
 
 import java.util.List;
 
