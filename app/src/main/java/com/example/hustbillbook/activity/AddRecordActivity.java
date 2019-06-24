@@ -23,7 +23,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hustbillbook.DataBaseHelper;
-import com.example.hustbillbook.MainActivity;
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.bean.RecordBean;
@@ -32,6 +31,10 @@ import com.example.hustbillbook.tools.CalenderUtils;
 import java.util.Calendar;
 
 public class AddRecordActivity extends AppCompatActivity {
+
+    // TODO replace two int with one boolean
+    boolean isExpense = true;
+
     final int EXPENSE = 1;
     final int INCOME = 2;
 
