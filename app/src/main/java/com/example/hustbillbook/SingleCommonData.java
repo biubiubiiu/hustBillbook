@@ -39,15 +39,32 @@ public class SingleCommonData {
         // 每次启动时删除数据库中所有内容，测试时使用
         dataBaseHelper.deleteAllRecords();
         // 生成假数据，测试时使用
-        for (int i = 0; i < 2; i++) {
-            RecordBean recordBean = new RecordBean();
-            recordBean.recordDate = "2019-6-19";
-            recordBean.recordTitle = "test" + i;
-            recordBean.recordMoney = "1000";
-            //            mRecordBeanList.add(recordBean；
-            // 将假数据插入到数据库中
-            dataBaseHelper.insertRecord(recordBean);
-        }
+//        for (int i = 0; i < 2; i++) {
+//            RecordBean recordBean = new RecordBean();
+//            recordBean.recordDate = "2019-6-19";
+//            recordBean.recordTitle = "test" + i;
+//            recordBean.recordMoney = "1000";
+//            recordBeanList.add(recordBean);
+//            // 将假数据插入到数据库中
+//            dataBaseHelper.insertRecord(recordBean);
+//        }
+
+        RecordBean r1 = new RecordBean();
+        r1.recordMoney = "1000";
+        r1.recordDate = "2019-6-25";
+        r1.recordTitle = "test1";
+        r1.recordType = RecordBean.Type.CANYIN.getId();
+        r1.isExpense = true;
+        dataBaseHelper.insertRecord(r1);
+
+        RecordBean r2 = new RecordBean();
+        r2.recordMoney = "1000";
+        r2.recordDate = "2019-6-25";
+        r2.recordTitle = "test2";
+        r2.recordType = RecordBean.Type.CANYIN.getId();
+        r2.isExpense = false;
+        dataBaseHelper.insertRecord(r2);
+
         // 通过数据库将查询数据，插入到List容器中
         Cursor cursor = dataBaseHelper.getAllRecords();
         // 先清空一下数据，小心驶得万年船
@@ -55,6 +72,7 @@ public class SingleCommonData {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 RecordBean recordBean = new RecordBean();
+                recordBean.recordType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.RECORD_TYPE));
                 recordBean.recordTitle = cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_TITLE));
                 recordBean.recordDate= cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_DATE));
                 recordBean.recordMoney = cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_MONEY));

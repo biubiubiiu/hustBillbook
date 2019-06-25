@@ -51,15 +51,15 @@
         android:layout_below="@id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <lecho.lib.hellocharts.view.LineChartView
-            android:id="@+id/linechart"
+        <lecho.lib.hellocharts.view.ColumnChartView
+            android:id="@+id/columnchart"
             android:layout_width="wrap_content"
             android:layout_height="250dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"/>
+            android:layout_marginTop="20dp"
+            android:padding="10dp"/>
         <LinearLayout
             android:id="@+id/layout_type_data"
-            android:layout_below="@id/linechart"
+            android:layout_below="@id/columnchart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

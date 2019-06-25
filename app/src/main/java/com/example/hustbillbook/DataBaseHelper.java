@@ -11,11 +11,13 @@ import com.example.hustbillbook.bean.RecordBean;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     // 数据表header
+    public static final String RECORD_TYPE = "record_type";
     public static final String RECORD_TITLE = "record_title";
     public static final String RECORD_DATE = "record_date"; // 格式: yy-mm-dd
     public static final String RECORD_MONEY = "record_money";
     // 数据表名
     public static final String RECORD_TABLE = "record_table";
+    public static final String ACCOUNT_TABLE = "account_table";
 
     public DataBaseHelper(Context context) {
         super(context, "hust_billbook", null, 1);
@@ -26,9 +28,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // 创建record_table数据表
         sqLiteDatabase.execSQL("create table if not exists record_table(" +
                 "inc_id integer primary key, " +
+                "record_type integer, " +
                 "record_title varchar, " +
                 "record_date varchar, " +
                 "record_money varchar)");
+        //TODO 创建account_table数据表
     }
 
     // 插入一条记录
@@ -36,6 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         // 创建一个键值对集合
         ContentValues cv = new ContentValues();
+        cv.put(RECORD_TYPE, recordBean.recordType);
         cv.put(RECORD_TITLE, recordBean.recordTitle);
         cv.put(RECORD_DATE, recordBean.recordDate);
         cv.put(RECORD_MONEY, recordBean.recordMoney);

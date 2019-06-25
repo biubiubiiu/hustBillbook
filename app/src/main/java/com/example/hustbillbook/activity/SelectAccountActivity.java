@@ -58,7 +58,6 @@ public class SelectAccountActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

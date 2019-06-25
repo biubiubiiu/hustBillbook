@@ -5,10 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hustbillbook.R;
+import com.example.hustbillbook.TmpRepository;
 import com.example.hustbillbook.bean.RecordBean;
+import com.example.hustbillbook.bean.TypeViewBean;
+import com.example.hustbillbook.tools.ImageUtils;
 
 import java.util.List;
 
@@ -50,12 +54,14 @@ public class RecordListAdaptor extends BaseAdapter {
             // 将布局文件转换成View对象
             view = mLayoutInflater.inflate(R.layout.item_recordlist, null);
             // 找到item布局文件中对应的控件
+            viewHolder.mTvRecordDate_monthAndDay = view.findViewById(R.id.tv_date_month_and_day);
+            viewHolder.mTvRecordDate_year = view.findViewById(R.id.tv_date_year);
+            viewHolder.mTvRecordType_image = view.findViewById(R.id.tv_type_second_image);
+            viewHolder.mTvRecordType_text = view.findViewById(R.id.tv_type_second_text);
             viewHolder.mTvRecordTitle = view.findViewById(R.id.tv_title);
-            viewHolder.mTvRecordDate = view.findViewById(R.id.tv_date);
             viewHolder.mTcRecordMoney = view.findViewById(R.id.tv_cost);
             // @see SDK:
             // Tags are essentially an extra piece of information that can be associated with a view
-            //
             // setTag 方法实际上是存储一部分View信息
             // 以减少创建多个View的性能消耗
             view.setTag(viewHolder);
@@ -65,17 +71,27 @@ public class RecordListAdaptor extends BaseAdapter {
         // 获取相应索引的Bean对象
         RecordBean bean = mList.get(i);
         // 设置控件的对应属性值
+        String[] array = bean.recordDate.split("-");
+        viewHolder.mTvRecordDate_monthAndDay.setText(array[1] + "-" + array[2]);
+        viewHolder.mTvRecordDate_year.setText(array[0]);
+
+        TmpRepository r = TmpRepository.getInstance();
+        TypeViewBean typeViewBean = r.findType(bean.recordType);
+        viewHolder.mTvRecordType_image.setImageResource(ImageUtils.getImageId(mContext, typeViewBean.getTypeImg()));
+        viewHolder.mTvRecordType_text.setText(typeViewBean.getTypeName());
+
         viewHolder.mTvRecordTitle.setText(bean.recordTitle);
-        viewHolder.mTvRecordDate.setText(bean.recordDate);
         viewHolder.mTcRecordMoney.setText(bean.recordMoney);
         return view;
     }
 
     // Tag
     private static class ViewHolder {
-
-        public TextView mTvRecordTitle;
-        public TextView mTvRecordDate;
-        public TextView mTcRecordMoney;
+        TextView mTvRecordDate_monthAndDay;
+        TextView mTvRecordDate_year;
+        ImageView mTvRecordType_image;
+        TextView mTvRecordType_text;
+        TextView mTvRecordTitle;
+        TextView mTcRecordMoney;
     }
 }
