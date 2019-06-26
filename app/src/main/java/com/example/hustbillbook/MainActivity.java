@@ -97,10 +97,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_chart) {
             Intent intent = new Intent(MainActivity.this, ChartsActivity.class);
-            // key: record_list
-            // value: mRecordBeanList
-            // 将mRecordBeanList序列化并传递到intent activity
-//            intent.putExtra("record_list", (Serializable) mRecordBeanList);
             startActivity(intent);
             return true;
         }

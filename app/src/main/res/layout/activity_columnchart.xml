@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/layout"
@@ -22,7 +21,7 @@
                 android:id="@+id/tv_week_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="日"
+                android:text="@string/day"
                 android:textSize="15sp"
                 android:background="@drawable/tv_week_selector"
                 android:textColor="@drawable/tv_text_selector" />
@@ -31,16 +30,16 @@
                 android:layout_toEndOf="@id/tv_week_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="月"
+                android:text="@string/month"
                 android:textSize="15sp"
                 android:background="@drawable/tv_month_selector"
                 android:textColor="@drawable/tv_text_selector" />
             <TextView
                 android:id="@+id/tv_year_chart"
-                android:layout_toRightOf="@id/tv_month_chart"
+                android:layout_toEndOf="@id/tv_month_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="年"
+                android:text="@string/year"
                 android:textSize="15sp"
                 android:background="@drawable/tv_year_selector"
                 android:textColor="@drawable/tv_text_selector" />
@@ -57,27 +56,37 @@
             android:layout_height="250dp"
             android:layout_marginTop="20dp"
             android:padding="10dp"/>
-        <LinearLayout
-            android:id="@+id/layout_type_data"
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_tab"
+            app:tabTextColor="@color/black"
             android:layout_below="@id/columnchart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expense" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/income"/>
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_ranking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tl_tab"
             android:paddingTop="20dp"
-            >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="支出排行榜"
-                android:textSize="15sp"
-                android:paddingLeft="10dp"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="20dp"
-                android:paddingLeft="10dp">
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+        </androidx.viewpager.widget.ViewPager>
+
     </RelativeLayout>
+
 </RelativeLayout>

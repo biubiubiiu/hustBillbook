@@ -56,7 +56,7 @@ public class RecordListAdaptor extends BaseAdapter {
             // 找到item布局文件中对应的控件
             viewHolder.mTvRecordDate_monthAndDay = view.findViewById(R.id.tv_date_month_and_day);
             viewHolder.mTvRecordDate_year = view.findViewById(R.id.tv_date_year);
-            viewHolder.mTvRecordType_image = view.findViewById(R.id.tv_type_second_image);
+            viewHolder.mTvRecordType_image = view.findViewById(R.id.iv_type_image);
             viewHolder.mTvRecordType_text = view.findViewById(R.id.tv_type_second_text);
             viewHolder.mTvRecordTitle = view.findViewById(R.id.tv_title);
             viewHolder.mTcRecordMoney = view.findViewById(R.id.tv_cost);

@@ -34,7 +34,7 @@
 
 
     <ImageView
-        android:id="@+id/tv_type_second_image"
+        android:id="@+id/iv_type_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
@@ -52,7 +52,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_toStartOf="@id/tv_cost"
-        android:layout_toEndOf="@id/tv_type_second_image"
+        android:layout_toEndOf="@id/iv_type_image"
         android:orientation="vertical">
 
         <TextView

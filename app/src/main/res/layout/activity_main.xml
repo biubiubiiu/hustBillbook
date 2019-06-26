@@ -32,7 +32,8 @@
         android:src="@drawable/img_jiahao"
         android:scaleType="center"
         app:borderWidth="0dp"
-        app:fabSize="normal"/>
+        app:fabSize="normal"
+        />
 
     <ImageView
         android:id="@+id/popupMenu"

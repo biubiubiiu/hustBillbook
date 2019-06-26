@@ -2,15 +2,24 @@ package com.example.hustbillbook.activity;
 
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
+import com.example.hustbillbook.adaptor.TypeRankPageAdaptor;
+import com.example.hustbillbook.adaptor.ViewPagerAdaptor;
 import com.example.hustbillbook.bean.RecordBean;
+import com.example.hustbillbook.bean.TypeRankBean;
 import com.example.hustbillbook.tools.CalenderUtils;
+import com.example.hustbillbook.tools.StatUtils;
+import com.google.android.material.tabs.TabLayout;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,10 +36,11 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-public class ChartsActivity extends Activity implements View.OnClickListener{
+public class ChartsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ColumnChartView mChart;
-    private Map<String, Float> table = new TreeMap<>();   // 使用TreeMap，避免手动排序
+    private Map<String, Float> tableExpense = new TreeMap<>();   // 使用TreeMap，避免手动排序
+    private Map<String, Float> tableIncome = new TreeMap<>();
     private ColumnChartData mData;
 
     private float maxValue; //用于保存Y轴的最大值，用于设置Y轴的上下限
@@ -40,6 +50,13 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
     private TextView weekTv;
     private TextView monthTv;
     private TextView yearTv;
+
+    private TabLayout mTabTl;
+    private ViewPager viewPager;
+
+    // TODO 考虑使用 Fragment 以提高性能
+    private List<View> viewList;
+    private List<TypeRankBean> rankedTypeList;
 
     private enum Page {
         Week, Month, Year
@@ -51,18 +68,59 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_columnchart);
 
-        mChart = findViewById(R.id.columnchart);
+        initData();
+        initMapping();
+        initWidget();
+    }
+
+    private void initData() {
         mData = new ColumnChartData();
         columnList = new ArrayList<>();
         mAxisXValues = new ArrayList<>();
+        rankedTypeList = new ArrayList<>();
+    }
 
+    private void initMapping() {
+        mChart = findViewById(R.id.columnchart);
         weekTv = findViewById(R.id.tv_week_chart);
         monthTv = findViewById(R.id.tv_month_chart);
         yearTv = findViewById(R.id.tv_year_chart);
+        mTabTl = findViewById(R.id.tl_tab);
+        viewPager = findViewById(R.id.vp_ranking);
+    }
 
+    private void initAction() {
         weekTv.setOnClickListener(this);
         monthTv.setOnClickListener(this);
         yearTv.setOnClickListener(this);
+    }
+
+    private void initWidget() {
+        mTabTl.setupWithViewPager(viewPager);
+        initViewPager();
+        initAction();
+    }
+
+    private void initViewPager() {
+        LayoutInflater inflater = this.getLayoutInflater(); // 获得一个视图管理器
+        viewList = new ArrayList<>();   //创建一个存放view的集合对象
+
+        for (int i = 0; i < 2; i++) {
+            View view = inflater.inflate(R.layout.item_ranking_page, null);
+            
+            // 使用 RecyclerView 代替 ListView
+            RecyclerView recyclerView = view.findViewById(R.id.page_ranking_recycle);
+            final TypeRankPageAdaptor adaptor = new TypeRankPageAdaptor(this, rankedTypeList);
+
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adaptor);
+            viewList.add(view);
+        }
+        
+        viewPager.setAdapter(new ViewPagerAdaptor(viewList));
+        viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewPager.setOffscreenPageLimit(1); // 预加载数据页
     }
 
     @Override
@@ -74,30 +132,12 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
         currentPage = Page.Week;
         generateValue(allData);
         generateWeekChart();
-
-        Log.d("chart", "chart activity started!");
     }
 
     // 对数据进行初步处理
     // 从list中读取数据，按日期合并花费，存放到table中
     private void generateValue(List<RecordBean> allData) {
-        if (allData != null) {
-            for (int i = 0; i < allData.size(); i++) {
-                RecordBean recordBean = allData.get(i);
-                String recordDate = recordBean.recordDate;
-
-                // 支出用正数表示，收入用负数表示
-                float recordMoney = Float.valueOf(recordBean.recordMoney);
-                recordMoney *= (recordBean.isExpense ? 1 : -1);
-
-                if (!table.containsKey(recordDate)) {
-                    table.put(recordDate, recordMoney);
-                } else {
-                    float originMoney = table.get(recordDate);
-                    table.put(recordDate, originMoney + recordMoney);
-                }
-            }
-        }
+        StatUtils.mergeByDate(allData, tableExpense, tableIncome);
     }
 
     // 生成账单周报
@@ -132,6 +172,7 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
         generateChart();
     }
 
+    // 生成柱状图
     private void generateChart() {
         Axis axisX = new Axis(mAxisXValues);//x轴
         Axis axisY = new Axis();//y轴
@@ -224,18 +265,17 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
                 SubcolumnValue subIncome = new SubcolumnValue();
                 SubcolumnValue subExpense = new SubcolumnValue();
 
-                currentValue = table.getOrDefault(days.get(i) ,(float)0.0);
-                if (Math.abs(currentValue) > maxValue)
-                    maxValue = currentValue;
+                // 支出为正，显示在上方
+                currentValue = tableExpense.getOrDefault(days.get(i) ,(float)0.0);
+                maxValue = Math.max(maxValue, currentValue);
+                subExpense.setValue(currentValue);
+                subExpense.setColor(Color.RED);
 
-                // 支出，为正，显示 在上方
-                if (currentValue >= 0) {
-                    subExpense.setValue(currentValue);
-                    subExpense.setColor(Color.RED);
-                } else {    // 收入显示在下方
-                    subIncome.setValue(-currentValue);
-                    subIncome.setColor(Color.GREEN);
-                }
+                // 收入显示在下方
+                currentValue = tableIncome.getOrDefault(days.get(i), (float)0.0);
+                maxValue = Math.max(maxValue, currentValue);
+                subIncome.setValue(-currentValue);
+                subIncome.setColor(Color.GREEN);
 
                 subcolumnValueList.add(subExpense);
                 subcolumnValueList.add(subIncome);
@@ -265,18 +305,17 @@ public class ChartsActivity extends Activity implements View.OnClickListener{
                     subIncome.setColor(Color.GREEN);
                     list.add(subIncome);
 
-                    maxValue = Math.max(maxValue, Math.max(sumExpense, -sumIncome));
+                    maxValue = Math.max(maxValue, Math.max(sumExpense, sumIncome));
 
-                    Column column = new Column(list);
-                    columnList.add(column);
+                    columnList.add(new Column(list));
 
                     // 处理下一个月份
                     currMonth = month;
                     sumExpense = 0;
                     sumIncome = 0;
                 }
-                sumExpense += table.getOrDefault(day, (float)0.0);
-                sumIncome += table.getOrDefault(day, (float)0.0);
+                sumExpense += tableExpense.getOrDefault(day, (float)0.0);
+                sumIncome += tableIncome.getOrDefault(day, (float)0.0);
             }
         }
     }
