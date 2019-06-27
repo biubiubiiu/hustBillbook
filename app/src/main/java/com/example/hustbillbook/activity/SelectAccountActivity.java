@@ -5,59 +5,58 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hustbillbook.R;
+import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.adaptor.AccountListAdaptor;
-import com.example.hustbillbook.bean.AccountBean;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class SelectAccountActivity extends AppCompatActivity {
-    //
-    private List<AccountBean> accountList = new ArrayList<>();
-    //待修改
-
-    private int numberOfAccountBean;//账户编号
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_account);
 
-        //
-        initAccountBeans(); //初始化账户数据
+        listView = findViewById(R.id.listView1);
 
-        AccountListAdaptor adapter = new AccountListAdaptor(SelectAccountActivity.this, R.layout.item_accountlist, accountList);
-
-        ListView listView = findViewById(R.id.listView1);
+        AccountListAdaptor adapter = new AccountListAdaptor(SelectAccountActivity.this, R.layout.item_accountlist, SingleCommonData.getAccountList());
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent =  new Intent();
-                intent.putExtra("position", position);
+                Intent intent;
 
-                SelectAccountActivity.this.setResult(RESULT_OK, intent);
-                SelectAccountActivity.this.finish();
-                //账户选择完成，返回
+                if (position == SingleCommonData.getAccountList().size() - 1){
+                    intent = new Intent(SelectAccountActivity.this, AddAccountActivity.class);
+
+                    startActivityForResult(intent, 0);//将请求码设为0，添加新账户
+                }
+                else {
+                    intent = new Intent();
+                    intent.putExtra("position", position);
+
+                    SelectAccountActivity.this.setResult(RESULT_OK, intent);
+                    SelectAccountActivity.this.finish();
+                    //账户选择完成，返回
+                }
+
             }
         });
 
-        LinearLayout layout = findViewById(R.id.addAccountButton);
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SelectAccountActivity.this, AddAccountActivity.class);
-                startActivity(intent);
-            }
-        });
 
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == 0){
+            AccountListAdaptor adapter = new AccountListAdaptor(SelectAccountActivity.this, R.layout.item_accountlist, SingleCommonData.getAccountList());
+            listView.setAdapter(adapter);
+        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -71,14 +70,4 @@ public class SelectAccountActivity extends AppCompatActivity {
         return false;
     }
 
-    //
-    private void initAccountBeans(){
-        for(int i=0; i<10 ; i++){
-            AccountBean chinaBank = new AccountBean("中国银行储蓄卡", 1, 100, "工资卡");
-            accountList.add(chinaBank);
-
-            AccountBean cash = new AccountBean("现金", 2, 50.00, "钱");
-            accountList.add(cash);
-        }
-    }
 }

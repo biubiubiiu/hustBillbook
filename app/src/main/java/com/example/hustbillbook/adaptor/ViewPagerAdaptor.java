@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ViewPagerAdaptor extends PagerAdapter {
 
-    private List<View> viewList;
+    protected List<View> viewList;
 
     public ViewPagerAdaptor(List<View> viewList) {
         this.viewList = viewList;

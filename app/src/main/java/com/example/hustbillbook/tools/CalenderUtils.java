@@ -38,7 +38,7 @@ public class CalenderUtils {
 
         List<String> result = new ArrayList<>();
         for (int i = 1; i <= daysInMonth; i++) {
-            calendar.set(calendar.DAY_OF_MONTH, i);
+            calendar.set(Calendar.DAY_OF_MONTH, i);
             result.add(calendar.get(Calendar.YEAR) + "-" +
                     (calendar.get(Calendar.MONTH) + 1) + "-" +
                     calendar.get(Calendar.DAY_OF_MONTH));
@@ -52,7 +52,7 @@ public class CalenderUtils {
 
         List<String> result = new ArrayList<>();
         for (int i = 1; i <= daysInYear; i++) {
-            calendar.set(calendar.DAY_OF_YEAR, i);
+            calendar.set(Calendar.DAY_OF_YEAR, i);
             result.add(calendar.get(Calendar.YEAR) + "-" +
                     (calendar.get(Calendar.MONTH) + 1) + "-" +
                     calendar.get(Calendar.DAY_OF_MONTH));

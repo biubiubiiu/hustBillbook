@@ -52,7 +52,7 @@ public class RecordListAdaptor extends BaseAdapter {
         if (view == null) {
             viewHolder = new ViewHolder();
             // 将布局文件转换成View对象
-            view = mLayoutInflater.inflate(R.layout.item_recordlist, null);
+            view = mLayoutInflater.inflate(R.layout.item_recordlist, viewGroup, false);
             // 找到item布局文件中对应的控件
             viewHolder.mTvRecordDate_monthAndDay = view.findViewById(R.id.tv_date_month_and_day);
             viewHolder.mTvRecordDate_year = view.findViewById(R.id.tv_date_year);
@@ -72,7 +72,7 @@ public class RecordListAdaptor extends BaseAdapter {
         RecordBean bean = mList.get(i);
         // 设置控件的对应属性值
         String[] array = bean.recordDate.split("-");
-        viewHolder.mTvRecordDate_monthAndDay.setText(array[1] + "-" + array[2]);
+        viewHolder.mTvRecordDate_monthAndDay.setText(view.getContext().getString(R.string.month_day, array[1], array[2]));
         viewHolder.mTvRecordDate_year.setText(array[0]);
 
         TmpRepository r = TmpRepository.getInstance();
@@ -82,6 +82,7 @@ public class RecordListAdaptor extends BaseAdapter {
 
         viewHolder.mTvRecordTitle.setText(bean.recordTitle);
         viewHolder.mTcRecordMoney.setText(bean.recordMoney);
+
         return view;
     }
 

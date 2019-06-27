@@ -24,7 +24,7 @@ import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.TmpRepository;
 import com.example.hustbillbook.adaptor.ViewPagerAdaptor;
-import com.example.hustbillbook.adaptor.TypeViewPageAdaptor;
+import com.example.hustbillbook.adaptor.TypeRecycleAdaptor;
 import com.example.hustbillbook.bean.RecordBean;
 import com.example.hustbillbook.bean.TypeViewBean;
 import com.example.hustbillbook.tools.CalenderUtils;
@@ -34,9 +34,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class AddRecordActivity extends AppCompatActivity implements View.OnClickListener{
+public class AddRecordActivity extends AppCompatActivity implements View.OnClickListener {
 
-    boolean isExpense;
+    private boolean isExpense;
 
     private ViewPager viewPager;
     private LinearLayout indicator; // 分页标识
@@ -62,10 +62,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     private DataBaseHelper mDataBaseHelper;
 
-    final int SPAN_COUNT = 4;   // viewpager 中一行显示的分类个数
-    final int ITEMS_PER_PAGE = SPAN_COUNT * 3; // viewpager 中一页显示的类别个数
-    final int MAX_INTEGER_LENGTH = 8;   // 输入金额中，整数部分的最大长度
-    final int MAX_DECIMAL_LENGTH = 2;   // 输入金额中，小数部分的最大长度
+    private final int SPAN_COUNT = 4;   // viewpager 中一行显示的分类个数
+    private final int ITEMS_PER_PAGE = SPAN_COUNT * 3; // viewpager 中一页显示的类别个数
+    private final int MAX_INTEGER_LENGTH = 8;   // 输入金额中，整数部分的最大长度
+    private final int MAX_DECIMAL_LENGTH = 2;   // 输入金额中，小数部分的最大长度
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +76,12 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         initDataBaseHelper();
         initStatus();
         initWidget();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initViewPager();
     }
 
     private void initDataBaseHelper() {
@@ -112,8 +118,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
      初始化窗口组件
      */
     private void initWidget() {
-        // 初始化 viewpager
-        initViewPager();
         // 默认选择“消费”页的第一个分类
         typeTv.setText(expenseTypeList.get(0).getTypeName());
         // 为组件绑定动作监听器
@@ -133,17 +137,20 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         for (int i = 0; i < page; i++) {
             List<TypeViewBean> tmpList = new ArrayList<>();
             View view = inflater.inflate(R.layout.item_types_page, viewPager, false);
-            RecyclerView recyclerView = view.findViewById(R.id.page_type_recycle);
-            // 将每一页需要显示的分类添加到List
-            for (int j = 0; j <ITEMS_PER_PAGE && (i*ITEMS_PER_PAGE + j) < typeList.size(); j++)
-                tmpList.add(typeList.get(i*ITEMS_PER_PAGE+j));
 
-            final TypeViewPageAdaptor adaptor = new TypeViewPageAdaptor(this, tmpList);
-            adaptor.setOnClickListener(new TypeViewPageAdaptor.OnBookNoteClickListener() {
+            // 每一页使用 RecyclerView
+            RecyclerView recyclerView = view.findViewById(R.id.page_type_recycle);
+
+            // 将每一页需要显示的分类添加到List
+            for (int j = 0; j < ITEMS_PER_PAGE && (i * ITEMS_PER_PAGE + j) < typeList.size(); j++)
+                tmpList.add(typeList.get(i * ITEMS_PER_PAGE + j));
+
+            final TypeRecycleAdaptor adaptor = new TypeRecycleAdaptor(this, tmpList);
+            adaptor.setOnClickListener(new TypeRecycleAdaptor.OnClickListener() {
                 @Override
                 public void OnClick(int index) {
                     // 获取实际 index
-                    index = index +viewPager.getCurrentItem() * ITEMS_PER_PAGE;
+                    index = index + viewPager.getCurrentItem() * ITEMS_PER_PAGE;
                     typeTv.setText(typeList.get(index).getTypeName());
                     selectedType = typeList.get(index).getId();
 
@@ -162,7 +169,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         viewPager.setOffscreenPageLimit(1); // 预加载数据页
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -177,7 +185,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
         // 初始化底部分页指示器
         initIcon();
@@ -319,7 +328,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         }
 
         mDataBaseHelper.insertRecord(recordBean);
-        SingleCommonData.add(recordBean);
+        SingleCommonData.addRecord(recordBean);
         Toast.makeText(this, "记账成功！", Toast.LENGTH_SHORT).show();
         this.finish();
     }
@@ -334,10 +343,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         int dotIndex = curr.indexOf(".");
         if (dotIndex == -1) {
             if (curr.length() < MAX_INTEGER_LENGTH)
-                moneyTv.setText(String.format(Locale.US,"%s%d", curr, num));
+                moneyTv.setText(String.format(Locale.US, "%s%d", curr, num));
         } else {
-            if (curr.length() -1 - dotIndex < MAX_DECIMAL_LENGTH)
-                moneyTv.setText(String.format(Locale.US,"%s%d", curr, num));
+            if (curr.length() - 1 - dotIndex < MAX_DECIMAL_LENGTH)
+                moneyTv.setText(String.format(Locale.US, "%s%d", curr, num));
         }
     }
 
@@ -351,7 +360,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         if (curr.length() == 1)
             moneyTv.setText("0");
         else
-            moneyTv.setText(curr.substring(0, curr.length()-1));
+            moneyTv.setText(curr.substring(0, curr.length() - 1));
     }
 
     private void handleDotInput() {
@@ -376,7 +385,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 AddRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String selection = year + "-" + (monthOfYear+1) + "-" + dayOfMonth;
+                String selection = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                 if (selection.equals(CalenderUtils.getCurrentDate()))
                     dateTv.setText("今天");
                 else

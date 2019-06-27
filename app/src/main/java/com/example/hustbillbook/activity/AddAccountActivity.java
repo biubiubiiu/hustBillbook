@@ -1,87 +1,239 @@
 package com.example.hustbillbook.activity;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hustbillbook.DataBaseHelper;
 import com.example.hustbillbook.R;
+import com.example.hustbillbook.SingleCommonData;
+import com.example.hustbillbook.bean.AccountBean;
 
 public class AddAccountActivity extends AppCompatActivity {
+    final int MAX_INTEGER_LENGTH = 8;
+    final int MAX_DECIMAL_LENGTH = 2;
+    //设置账户金额整数部分最大8位，小数部分最大2位
+
     private Toast toast;
-    private int screenHeight;
+    private DataBaseHelper dataBaseHelper;
 
-    private EditText accountName;
-    private EditText accountMoney;
-    private EditText accountNote;
+    private EditText accName;
+    private EditText accMoney;
+    private EditText accNote;
 
-    private LinearLayout type_cash;
-    private LinearLayout type_card;
-    private LinearLayout type_credit;
-    private LinearLayout type_alipay;
-    private LinearLayout type_wechatpay;
-    private LinearLayout type_jdpay;
-    private LinearLayout type_qita;
-
-    private Button ok;
+    //用于设置图片的背景是否变黑
+    private TextView type_cash;
+    private TextView type_card;
+    private TextView type_credit;
+    private TextView type_alipay;
+    private TextView type_wechatpay;
+    private TextView type_jdpay;
+    private TextView type_qita;
 
     private String name;
     private String note;
-    private double money;
+    private String money;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
 
-        WindowManager wm = (WindowManager) AddAccountActivity.this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics dm = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(dm);
-        int height = dm.heightPixels;
-        float density = dm.density;
-        screenHeight = (int) (height/density);
-        //获取屏幕高度
+        accName = findViewById(R.id.et_accountName);
+        accMoney = findViewById(R.id.et_accountMoney);
+        accNote = findViewById(R.id.et_accountNote);
 
-        accountName = findViewById(R.id.editText5);
-        accountMoney = findViewById(R.id.editText6);
-        accountNote = findViewById(R.id.editText7);
+        type_cash = findViewById(R.id.tv_xianjin);
+        type_card = findViewById(R.id.tv_chuxuka);
+        type_credit = findViewById(R.id.tv_xinyongka);
+        type_alipay = findViewById(R.id.tv_zhifubao);
+        type_wechatpay = findViewById(R.id.tv_weixinzhifu);
+        type_jdpay = findViewById(R.id.tv_jingdongjinrong);
+        type_qita = findViewById(R.id.tv_qita);
 
-        type_cash = findViewById(R.id.linearLayout1);
-        type_card = findViewById(R.id.linearLayout2);
-        type_credit = findViewById(R.id.linearLayout3);
-        type_alipay = findViewById(R.id.linearLayout4);
-        type_wechatpay = findViewById(R.id.linearLayout5);
-        type_jdpay = findViewById(R.id.linearLayout6);
-        type_qita = findViewById(R.id.linearLayout7);
+        //默认选中现金账户类别
+        type_cash.setSelected(true);
+        //设置类别
+        type = AccountBean.Type.XIANJIN.getId();
 
-        ok = findViewById(R.id.button24);
-
+        //设置确认按钮的监听事件
+        Button ok = findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {  //设置确认健点击事件
             @Override
             public void onClick(View view) {
-                if(accountName.getText().toString().length() == 0){
+                if (accName.getText().toString().length() == 0) {         //账户名不为空
                     toast = Toast.makeText(getApplicationContext(), "请输入账户名称！", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM, 0, screenHeight / 4);      //设置toast位置
-
-                    LinearLayout linearLayout = (LinearLayout) toast.getView();
-                    TextView messageTextView = (TextView)linearLayout.getChildAt(0);
-                    messageTextView.setTextSize(20);
-
                     toast.show();
+                } else if (accName.getText().toString().length() > 20) {   //账户名长度不超过20个字符
+                    toast = Toast.makeText(getApplicationContext(), "账户名不超过20个字符！", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else if (accMoney.getText().toString().length() == 0) {  //账户金额不为空
+                    toast = Toast.makeText(getApplicationContext(), "请输入账户金额！", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    name = accName.getText().toString();
+                    money = accMoney.getText().toString();
+                    note = accNote.getText().toString();
+                    //type值已取得
+
+                    AccountBean accountBean = new AccountBean();
+                    accountBean.accountName = name;
+                    accountBean.accountMoney = money;
+                    accountBean.accountTitle = note;
+                    accountBean.accountType = type;
+
+                    dataBaseHelper = new DataBaseHelper(AddAccountActivity.this);
+                    dataBaseHelper.insertAccount(accountBean);
+
+                    SingleCommonData.addAccount(accountBean);
+
+                    toast = Toast.makeText(getApplicationContext(), "账户新建成功！", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    //结束活动，返回调用者
+                    finish();
+
+                    //TODO 返回调用界面
                 }
             }
         });
 
+        //账户金额输入检查函数
+        accMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String curr = accMoney.getText().toString();
+
+                if (curr.equals(".")) {   //一开始只输入一个小数点，自动补全为0.
+                    editable.replace(0, 1, "0.");
+                }
+                if (curr.equals("00")) {  //不允许连续输入0
+                    editable.delete(1, 2);
+                }
+                if (curr.length() >= 2 && curr.charAt(0) == '0' && curr.charAt(1) != '.') {//删掉整数部分开头的0
+                    editable.delete(0, 1);
+                }
+
+                int dotIndex = curr.indexOf(".");//小数点所在位置
+                if (dotIndex == -1) {    //此时没有小数，判断整数部分
+                    if (curr.length() > MAX_INTEGER_LENGTH)
+                        editable.delete(curr.length() - 1, curr.length());
+                } else {
+                    if (curr.length() - 1 - dotIndex > MAX_DECIMAL_LENGTH)
+                        editable.delete(dotIndex + 3, dotIndex + 4);
+                }
 
 
+            }
+        });
+
+
+        type_cash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_cash.setSelected(true);
+                type = AccountBean.Type.XIANJIN.getId();
+            }
+        });
+
+        type_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_card.setSelected(true);
+                type = AccountBean.Type.CHUXUKA.getId();
+            }
+        });
+
+        type_credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_credit.setSelected(true);
+                type = AccountBean.Type.XINYONGKA.getId();
+            }
+        });
+
+        type_alipay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_alipay.setSelected(true);
+                type = AccountBean.Type.ZHIFUBAO.getId();
+            }
+        });
+
+        type_wechatpay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_wechatpay.setSelected(true);
+                type = AccountBean.Type.WEIXINZHIFU.getId();
+            }
+        });
+
+        type_jdpay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_jdpay.setSelected(true);
+                type = AccountBean.Type.JINGDONG.getId();
+            }
+        });
+
+        type_qita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStatusAllFalse();
+                type_qita.setSelected(true);
+                type = AccountBean.Type.QITA.getId();
+            }
+        });
+
+    }
+
+    //先将全部设为false，再将被选中的设为true
+    private void setStatusAllFalse() {
+        type_cash.setSelected(false);
+        type_card.setSelected(false);
+        type_credit.setSelected(false);
+        type_alipay.setSelected(false);
+        type_wechatpay.setSelected(false);
+        type_jdpay.setSelected(false);
+        type_qita.setSelected(false);
+    }
+
+    //新增处理返回键
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            AddAccountActivity.this.setResult(RESULT_CANCELED);
+
+            AddAccountActivity.this.finish();
+        }
+        return false;
     }
 }

@@ -17,37 +17,40 @@ import com.example.hustbillbook.tools.ImageUtils;
 
 import java.util.List;
 
-public class TypeRankPageAdaptor extends RecyclerView.Adapter<TypeRankPageAdaptor.ViewHolder> {
+public class RankRecycleAdaptor extends RecyclerView.Adapter<RankRecycleAdaptor.ViewHolder> {
 
     private ChartsActivity mContext;
     private LayoutInflater mInflater;
     private List<TypeRankBean> mData;
 
-    public TypeRankPageAdaptor(ChartsActivity mContext, List<TypeRankBean> mData) {
+    public RankRecycleAdaptor(ChartsActivity mContext) {
         this.mContext = mContext;
         mInflater = LayoutInflater.from(mContext);
-        this.mData = mData;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_types, parent, false);
+        View view = mInflater.inflate(R.layout.item_ranking, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.typeName.setText(mData.get(position).getTypeName());
-        holder.img.setImageDrawable(ImageUtils.getDrawable(mContext, mData.get(position).getTypeImg()));
+        holder.typeName.setText(mData.get(position).getTypeView().getTypeName());
+        holder.img.setImageDrawable(ImageUtils.getDrawable(mContext, mData.get(position).getTypeView().getTypeImg()));
         holder.number.setText(String.valueOf(mData.get(position).getNumber()));
-        holder.ratio.setText(String.valueOf(mData.get(position).getRatio()));
+        holder.ratio.setText(mContext.getString(R.string.number_percentage, mData.get(position).getRatio()*100));
         holder.bar.setProgress((int)mData.get(position).getRatio()*100);
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void setData(List<TypeRankBean> mData) {
+        this.mData = mData;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,7 +61,7 @@ public class TypeRankPageAdaptor extends RecyclerView.Adapter<TypeRankPageAdapto
         private ImageView img;
         private ProgressBar bar;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             typeName = itemView.findViewById(R.id.tv_rank_type);

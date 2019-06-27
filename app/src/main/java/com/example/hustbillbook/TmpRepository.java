@@ -1,15 +1,10 @@
 package com.example.hustbillbook;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.SparseArray;
 
+import com.example.hustbillbook.bean.AccountBean;
 import com.example.hustbillbook.bean.RecordBean;
 import com.example.hustbillbook.bean.TypeViewBean;
-import com.example.hustbillbook.tools.ImageUtils;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +16,13 @@ public class TmpRepository {
 
     private List<TypeViewBean> allExpenseTypes;
     private List<TypeViewBean> allIncomeTypes;
+
+    // allRecordTypes = allExpenseTypes + allIncomeTypes
+    // 使用 SparseArray 替代 HashMap 以提高性能
+    private SparseArray<TypeViewBean> allRecordTypes;
+
+    private List<TypeViewBean> allAccountTypes;
+
     private static TmpRepository instance;
 
     // TODO 引用 strings.xml 文件来避免hardcode
@@ -52,6 +54,24 @@ public class TmpRepository {
         allIncomeTypes.add(new TypeViewBean(RecordBean.Type.TOUZI.getId(), "投资", "img_touzi"));
         allIncomeTypes.add(new TypeViewBean(RecordBean.Type.JIANGJIN.getId(), "奖金", "img_jiangjin"));
         allIncomeTypes.add(new TypeViewBean(RecordBean.Type.QITA.getId(), "其他", "img_qita"));
+
+        allAccountTypes = new ArrayList<>();
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.CHUXUKA.getId(), "储蓄卡", "img_chuxukazhanghu"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.XINYONGKA.getId(), "信用卡", "img_xinyongkazhanghu"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.ZHIFUBAO.getId(), "支付宝", "img_zhifubaozhanghu"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.WEIXINZHIFU.getId(), "微信支付", "img_weixinzhifu"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.XIANJIN.getId(), "现金", "img_xianjinzhanghu"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.JINGDONG.getId(), "京东", "img_jingdongzhanghu"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.QITA.getId(), "其他", "img_qita"));
+        allAccountTypes.add(new TypeViewBean(AccountBean.Type.ADDACCOUNT.getId(), "添加账户", "img_add_account"));
+
+        allRecordTypes = new SparseArray<>();
+        for (TypeViewBean typeViewBean: allExpenseTypes) {
+            allRecordTypes.put(typeViewBean.getId(), typeViewBean);
+        }
+        for (TypeViewBean typeViewBean: allIncomeTypes) {
+            allRecordTypes.put(typeViewBean.getId(), typeViewBean);
+        }
     }
 
     public static TmpRepository getInstance() {
@@ -60,6 +80,9 @@ public class TmpRepository {
         }
         return instance;
     }
+    public SparseArray<TypeViewBean> getAllRecordTypes() {
+        return allRecordTypes;
+    }
 
     public List<TypeViewBean> getAllExpenseTypes() {
         return allExpenseTypes;
@@ -67,12 +90,18 @@ public class TmpRepository {
 
     public List<TypeViewBean> getAllIncomeTypes() { return allIncomeTypes; }
 
+    public List<TypeViewBean> getAllAccountTypes() { return allAccountTypes; }
+
     public TypeViewBean findType(int id) {
         for (TypeViewBean typeViewBean : allExpenseTypes) {
             if (typeViewBean.getId() == id)
                 return typeViewBean;
         }
         for (TypeViewBean typeViewBean : allIncomeTypes) {
+            if (typeViewBean.getId() == id)
+                return typeViewBean;
+        }
+        for (TypeViewBean typeViewBean : allAccountTypes){
             if (typeViewBean.getId() == id)
                 return typeViewBean;
         }

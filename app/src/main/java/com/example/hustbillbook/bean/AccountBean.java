@@ -1,5 +1,7 @@
 package com.example.hustbillbook.bean;
 
+import org.jetbrains.annotations.Contract;
+
 /*
  账户信息基类
  accountName: 账户名
@@ -9,47 +11,30 @@ package com.example.hustbillbook.bean;
  */
 public class AccountBean {
 
-    private String accountName;
-    private int accountType;
-    private double accountMoney;
-    private String accountNote;
+    public String accountName;
+    public int accountType;
+    public String accountMoney;
+    public String accountTitle;
 
-    public AccountBean(String aN, int aT, double aM, String aNote) {
-        this.accountName = aN;
-        this.accountType = aT;
-        this.accountMoney = aM;
-        this.accountNote = aNote;
-    }
+    public enum Type{
+        CHUXUKA (50),
+        XINYONGKA (51),
+        ZHIFUBAO (52),
+        WEIXINZHIFU (53),
+        XIANJIN (54),
+        JINGDONG (55),
+        QITA (56),
+        ADDACCOUNT (57);
 
-    public String getAccountNote() {
-        return accountNote;
-    }
+        Type(int id) {
+            this.id = id;
+        }
 
-    public void setAccountNote(String accountNote) {
-        this.accountNote = accountNote;
-    }
+        private final int id;
 
-    public int getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(int accountType) {
-        this.accountType = accountType;
-    }
-
-    public double getAccountMoney() {
-        return accountMoney;
-    }
-
-    public void setAccountMoney(double accountMoney) {
-        this.accountMoney = accountMoney;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+        @Contract(pure = true)
+        public int getId() {
+            return this.id;
+        }
     }
 }

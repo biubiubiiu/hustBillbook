@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,331 +7,239 @@
     android:orientation="vertical"
     tools:context=".activity.AddAccountActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <include layout="@layout/app_toolbar">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    </include>
 
-            <!--标题-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ll_title_background"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+    <TextView
+        android:id="@+id/tv_accountType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/zhanghuleixing"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_xianjin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tianjiazhanghu"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="24sp" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tianjiazhanghu"
+        android:textColor="@drawable/tv_text_selector"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="@id/toolbar" />
 
-            </LinearLayout>
+    <TextView
+        android:id="@+id/tv_xianjin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_xianjin"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/xianjin"
+        android:textColor="@android:color/background_dark"
+        android:layout_marginTop="15dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/tv_chuxuka"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_accountType"
+        app:layout_constraintBottom_toTopOf="@id/tv_weixinzhifu"/>
 
-            <!--账户名称-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="20dp">
+    <TextView
+        android:id="@+id/tv_chuxuka"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_chuxuka"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/chuxuka"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/tv_xinyongka"
+        app:layout_constraintStart_toEndOf="@id/tv_xianjin"
+        app:layout_constraintTop_toTopOf="@id/tv_xianjin" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zhanghumingcheng"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="24sp"
-                    android:layout_marginLeft="20dp"/>
+    <TextView
+        android:id="@+id/tv_xinyongka"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_xinyongka"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/xingyongka"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/tv_zhifubao"
+        app:layout_constraintStart_toEndOf="@id/tv_chuxuka"
+        app:layout_constraintTop_toTopOf="@id/tv_xianjin" />
 
-                <EditText
-                    android:id="@+id/editText5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:textSize="24sp"
-                    android:textColor="@color/cardview_dark_background"
-                    android:paddingTop="15dp"/>
+    <TextView
+        android:id="@+id/tv_zhifubao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_zhifubao"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/zhifubao"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_xinyongka"
+        app:layout_constraintTop_toTopOf="@id/tv_xianjin" />
 
-            </LinearLayout>
+    <TextView
+        android:id="@+id/tv_weixinzhifu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_wechat"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/weixingzhifu"
+        android:layout_marginTop="15dp"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@id/tv_xianjin"
+        app:layout_constraintStart_toStartOf="@id/tv_xianjin"
+        app:layout_constraintTop_toBottomOf="@id/tv_xianjin" />
 
-            <!--账户余额-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="20dp">
+    <TextView
+        android:id="@+id/tv_jingdongjinrong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_jdfinance"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/jingdongjinrong"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@id/tv_chuxuka"
+        app:layout_constraintStart_toStartOf="@id/tv_chuxuka"
+        app:layout_constraintTop_toTopOf="@id/tv_weixinzhifu" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zhanghuyue"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="24sp"
-                    android:layout_marginLeft="20dp"/>
+    <TextView
+        android:id="@+id/tv_qita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/layer_img_others"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/qita"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@id/tv_xinyongka"
+        app:layout_constraintStart_toStartOf="@id/tv_xinyongka"
+        app:layout_constraintTop_toTopOf="@id/tv_jingdongjinrong" />
 
-                <EditText
-                    android:id="@+id/editText6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:textSize="24sp"
-                    android:paddingTop="15dp"
-                    android:textColor="@color/cardview_dark_background"/>
-            </LinearLayout>
+    <TextView
+        android:id="@+id/tv_accountName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zhanghumingcheng"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/et_accountName"
+        app:layout_constraintStart_toStartOf="@id/tv_accountType"
+        app:layout_constraintTop_toTopOf="@id/et_accountName"
+        app:layout_constraintBottom_toBottomOf="@id/et_accountName"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/zhanghuleixing"
-                android:textSize="24sp"
-                android:textColor="@android:color/background_dark"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="20dp"/>
+    <EditText
+        android:id="@+id/et_accountName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingTop="15dp"
+        android:singleLine="true"
+        android:textColor="@color/dark_background"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/et_accountMoney"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_accountName"
+        app:layout_constraintTop_toBottomOf="@id/tv_qita" />
 
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:columnCount="4"
-                android:orientation="horizontal"
-                >
 
-                <LinearLayout
-                    android:id="@+id/linearLayout1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_accountMoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zhanghuyue"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/et_accountMoney"
+        app:layout_constraintStart_toStartOf="@id/tv_accountName"
+        app:layout_constraintTop_toTopOf="@id/et_accountMoney"
+        app:layout_constraintBottom_toBottomOf="@id/et_accountMoney"/>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_xianjinzhanghu" />
+    <EditText
+        android:id="@+id/et_accountMoney"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:inputType="numberDecimal"
+        android:paddingTop="15dp"
+        android:singleLine="true"
+        android:textColor="@color/dark_background"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/et_accountNote"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_accountMoney"
+        app:layout_constraintTop_toBottomOf="@id/et_accountName"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/xianjin"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp"
-                        android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/tv_accountNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zhanghubeizhu"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/tv_accountName"
+        app:layout_constraintEnd_toStartOf="@id/et_accountNote"
+        app:layout_constraintTop_toTopOf="@id/et_accountNote"
+        app:layout_constraintBottom_toBottomOf="@id/et_accountNote"/>
 
-                </LinearLayout>
+    <EditText
+        android:id="@+id/et_accountNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:paddingTop="15dp"
+        android:singleLine="true"
+        android:textColor="@color/dark_background"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/tv_accountNote"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_accountMoney"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="200dp"/>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical">
+    <Button
+        android:id="@+id/btn_ok"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_green_background"
+        android:text="@string/queren"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_chuxukazhanghu" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/chuxuka"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_xinyongkazhanghu" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/xingyongka"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_zhifubaozhanghu" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/zhifubao"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_weixinzhifu" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/weixingzhifu"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_jingdongzhanghu" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/jingdongjinrong"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="60dp"
-                        android:maxHeight="60dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_qita" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/qita"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-            </GridLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notes"
-                android:textSize="24sp"
-                android:textColor="@android:color/background_dark"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="20dp"/>
-
-            <EditText
-                android:id="@+id/editText7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:paddingTop="20dp"
-                android:textColor="@color/cardview_dark_background"
-                android:textSize="24sp" />
-
-            <Button
-                android:id="@+id/button24"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/btn_blue_background"
-                android:text="@string/queren"
-                android:textSize="24sp" />
-
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

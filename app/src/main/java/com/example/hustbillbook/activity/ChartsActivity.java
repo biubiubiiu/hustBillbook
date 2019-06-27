@@ -2,8 +2,8 @@ package com.example.hustbillbook.activity;
 
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
-import com.example.hustbillbook.adaptor.TypeRankPageAdaptor;
-import com.example.hustbillbook.adaptor.ViewPagerAdaptor;
+import com.example.hustbillbook.adaptor.RankViewPagerAdaptor;
+import com.example.hustbillbook.adaptor.RankRecycleAdaptor;
 import com.example.hustbillbook.bean.RecordBean;
 import com.example.hustbillbook.bean.TypeRankBean;
 import com.example.hustbillbook.tools.CalenderUtils;
@@ -43,9 +43,9 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     private Map<String, Float> tableIncome = new TreeMap<>();
     private ColumnChartData mData;
 
-    private float maxValue; //用于保存Y轴的最大值，用于设置Y轴的上下限
-    List<Column> columnList;//柱子列表
-    List<AxisValue> mAxisXValues;
+    private float maxValue;          //用于保存Y轴的最大值，用于设置Y轴的上下限
+    private List<Column> columnList;//柱子列表
+    private List<AxisValue> mAxisXValues;
 
     private TextView weekTv;
     private TextView monthTv;
@@ -54,9 +54,8 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     private TabLayout mTabTl;
     private ViewPager viewPager;
 
-    // TODO 考虑使用 Fragment 以提高性能
-    private List<View> viewList;
-    private List<TypeRankBean> rankedTypeList;
+    private List<TypeRankBean> rankedExpenseList;
+    private List<TypeRankBean> rankedIncomeList;
 
     private enum Page {
         Week, Month, Year
@@ -66,18 +65,39 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_columnchart);
+        setContentView(R.layout.activity_analyze);
 
         initData();
         initMapping();
         initWidget();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        List<RecordBean> allData = SingleCommonData.getRecordList();
+
+        weekTv.setSelected(true);
+        currentPage = Page.Week;
+
+        // 按日期合并记录，存放到两个 map 中
+        StatUtils.mergeByDate(allData, tableExpense, tableIncome);
+        generateWeekChart();
+
+        // 按类型合并记录，存放到两个 list 中
+        StatUtils.mergeByType(allData, rankedExpenseList, rankedIncomeList);
+        initViewPager();
+
+        // 必须在 viewPager 设置 adaptor 后使用
+        mTabTl.setupWithViewPager(viewPager);
+    }
+
     private void initData() {
         mData = new ColumnChartData();
         columnList = new ArrayList<>();
         mAxisXValues = new ArrayList<>();
-        rankedTypeList = new ArrayList<>();
+        rankedExpenseList = new ArrayList<>();
+        rankedIncomeList = new ArrayList<>();
     }
 
     private void initMapping() {
@@ -96,21 +116,26 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initWidget() {
-        mTabTl.setupWithViewPager(viewPager);
-        initViewPager();
         initAction();
     }
 
     private void initViewPager() {
         LayoutInflater inflater = this.getLayoutInflater(); // 获得一个视图管理器
-        viewList = new ArrayList<>();   //创建一个存放view的集合对象
+        // TODO 考虑使用 Fragment 以提高性能
+        List<View> viewList = new ArrayList<>();   //创建一个存放view的集合对象
 
         for (int i = 0; i < 2; i++) {
-            View view = inflater.inflate(R.layout.item_ranking_page, null);
+            View view = inflater.inflate(R.layout.item_ranking_page, viewPager, false);
             
             // 使用 RecyclerView 代替 ListView
             RecyclerView recyclerView = view.findViewById(R.id.page_ranking_recycle);
-            final TypeRankPageAdaptor adaptor = new TypeRankPageAdaptor(this, rankedTypeList);
+
+            // 设置 adaptor
+            final RankRecycleAdaptor adaptor = new RankRecycleAdaptor(this);
+            if (i == 0)
+                adaptor.setData(rankedExpenseList);
+            else
+                adaptor.setData(rankedIncomeList);
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
@@ -118,30 +143,27 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
             viewList.add(view);
         }
         
-        viewPager.setAdapter(new ViewPagerAdaptor(viewList));
+        viewPager.setAdapter(new RankViewPagerAdaptor(viewList));
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(1); // 预加载数据页
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        List<RecordBean> allData = SingleCommonData.getRecordList();
-
-        weekTv.setSelected(true);
-        currentPage = Page.Week;
-        generateValue(allData);
-        generateWeekChart();
-    }
-
-    // 对数据进行初步处理
-    // 从list中读取数据，按日期合并花费，存放到table中
-    private void generateValue(List<RecordBean> allData) {
-        StatUtils.mergeByDate(allData, tableExpense, tableIncome);
+    public void generateChart() {
+        switch (currentPage) {
+            case Week:
+                generateWeekChart();
+                break;
+            case Month:
+                generateMonthChart();
+                break;
+            case Year:
+                generateYearChart();
+                break;
+        }
     }
 
     // 生成账单周报
-    public void generateWeekChart() {
+    private void generateWeekChart() {
         // 先清空图表内容
         clearData();
         // 获取当前周所有日期
@@ -151,29 +173,29 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         // 填充坐标数据
         fillPointValues(weekDays, false);
         // 生成图表
-        generateChart();
+        drawChart();
     }
 
     // 生成月度账单分析
-    public void generateMonthChart() {
+    private void generateMonthChart() {
         clearData();
         List<String> monthDays = CalenderUtils.getMonthDays();
         fillMonthlyAxisXValues(monthDays);
         fillPointValues(monthDays, false);
-        generateChart();
+        drawChart();
     }
 
     // 生成年度账单分析
-    public void generateYearChart() {
+    private void generateYearChart() {
         clearData();
         List<String> yearDays = CalenderUtils.getYearDays();
         fillYearlyAxisXValues();
         fillPointValues(yearDays, true);
-        generateChart();
+        drawChart();
     }
 
     // 生成柱状图
-    private void generateChart() {
+    private void drawChart() {
         Axis axisX = new Axis(mAxisXValues);//x轴
         Axis axisY = new Axis();//y轴
 
@@ -326,7 +348,6 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         mAxisXValues.clear();
     }
 
-    // TODO 使用继承方式来去除switch代码
     @Override
     public void onClick(View view) {
         weekTv.setSelected(false);
@@ -334,18 +355,24 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         yearTv.setSelected(false);
         switch (view.getId()) {
             case R.id.tv_week_chart:
-                if (currentPage != Page.Week) generateWeekChart();
-                currentPage = Page.Week;
+                if (currentPage != Page.Week) {
+                    currentPage = Page.Week;
+                    generateChart();
+                }
                 weekTv.setSelected(true);
                 break;
             case R.id.tv_month_chart:
-                if (currentPage != Page.Month) generateMonthChart();
-                currentPage = Page.Month;
+                if (currentPage != Page.Month) {
+                    currentPage = Page.Month;
+                    generateChart();
+                }
                 monthTv.setSelected(true);
                 break;
             case R.id.tv_year_chart:
-                if (currentPage != Page.Year) generateYearChart();
+                if (currentPage != Page.Year){
                 currentPage = Page.Year;
+                generateChart();
+                }
                 yearTv.setSelected(true);
                 break;
         }

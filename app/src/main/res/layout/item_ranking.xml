@@ -14,8 +14,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
-        android:maxWidth="50dp"
-        android:maxHeight="50dp"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
         android:scaleType="fitCenter"
         tools:srcCompat="@drawable/img_jiaotong"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/tv_rank_type"
         app:layout_constraintTop_toTopOf="@id/iv_rank_type_image"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="15dp"
         tools:text="100%"/>
     <TextView
         android:id="@+id/tv_rank_number"

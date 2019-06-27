@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#F6F7F8" />   边框内容背景颜色
-
+    <solid android:color="#F6F7F8" />
     <stroke
         android:width="0.01dp"
-        android:color="@color/cardview_dark_background" />     边框颜色
-
+        android:color="@color/cardview_dark_background" />
     <padding
         android:bottom="1dp"
         android:left="0.5dp"

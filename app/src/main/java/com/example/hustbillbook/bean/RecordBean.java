@@ -1,10 +1,8 @@
 package com.example.hustbillbook.bean;
 
-import com.example.hustbillbook.R;
 
 import org.jetbrains.annotations.Contract;
 
-import java.io.Serializable;
 
 /*
  账单记录基类
@@ -21,9 +19,10 @@ public class RecordBean {
     public String recordTitle;
     public String recordDate;
     public String recordMoney;
+    public int recordAccount;
 
     public enum Type {
-//        CANYIN(R.string.canyin),  // do not use this method
+        //        CANYIN(R.string.canyin),  // do not use this method
         CANYIN(1),
         DIANYING(2),
         FANGZU(3),

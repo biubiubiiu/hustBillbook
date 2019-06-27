@@ -19,21 +19,21 @@ import java.util.List;
 /*
  参照了gihub项目 cocoBill 的写法
  */
-public class TypeViewPageAdaptor extends RecyclerView.Adapter<TypeViewPageAdaptor.ViewHolder> {
+public class TypeRecycleAdaptor extends RecyclerView.Adapter<TypeRecycleAdaptor.ViewHolder> {
 
     private AddRecordActivity mContext;
     private LayoutInflater mInflater;
     private List<TypeViewBean> mData;
 
-    private OnBookNoteClickListener mListener;
+    private OnClickListener mListener;
 
-    public TypeViewPageAdaptor(AddRecordActivity mContext, List<TypeViewBean> mData) {
+    public TypeRecycleAdaptor(AddRecordActivity mContext, List<TypeViewBean> mData) {
         this.mContext = mContext;
         mInflater = LayoutInflater.from(mContext);
         this.mData = mData;
     }
 
-    public void setOnClickListener(OnBookNoteClickListener listener) {
+    public void setOnClickListener(OnClickListener listener) {
         if (mListener == null)
             mListener = listener;
     }
@@ -78,7 +78,7 @@ public class TypeViewPageAdaptor extends RecyclerView.Adapter<TypeViewPageAdapto
     /**
      * 自定义分类选择接口
      */
-    public interface OnBookNoteClickListener {
+    public interface OnClickListener {
         void OnClick(int index);
     }
 }

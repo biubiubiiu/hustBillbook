@@ -1,14 +1,21 @@
 package com.example.hustbillbook.bean;
 
-public class TypeRankBean extends TypeViewBean implements Comparable{
+import org.jetbrains.annotations.NotNull;
 
+public class TypeRankBean{
+
+    private TypeViewBean typeView;
     private float ratio;    // [0,1]
     private float number;   // 具体数据
 
-    public TypeRankBean(int id, String typeName, String typeImg, float ratio, float number) {
-        super(id, typeName, typeImg);
+    public TypeRankBean(@NotNull TypeViewBean typeViewBean, float ratio, float number) {
+        this.typeView = typeViewBean;
         this.ratio = ratio;
         this.number = number;
+    }
+
+    public TypeViewBean getTypeView() {
+        return typeView;
     }
 
     public float getRatio() {
@@ -19,13 +26,5 @@ public class TypeRankBean extends TypeViewBean implements Comparable{
         return number;
     }
 
-    @Override
-    public int compareTo(Object o) {
-        if (number == ((TypeRankBean) o).number)
-            return 0;
-        else if (number < ((TypeRankBean) o).number)
-            return -1;
-        else
-            return 1;
-    }
+    public void setRatio(float ratio) { this.ratio = ratio; }
 }

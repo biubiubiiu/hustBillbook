@@ -6,26 +6,29 @@ import android.os.Bundle;
 
 import com.example.hustbillbook.activity.AddRecordActivity;
 import com.example.hustbillbook.activity.ChartsActivity;
-import com.example.hustbillbook.adaptor.RecordListAdaptor;
+import com.example.hustbillbook.activity.ViewAccountsActivity;
+import com.example.hustbillbook.adaptor.RecordRecycleAdaptor;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 
 public class MainActivity extends AppCompatActivity {
 
     private DataBaseHelper mDataBaseHelper;
-    private RecordListAdaptor mAdapter;
+    private RecordRecycleAdaptor mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,25 +39,26 @@ public class MainActivity extends AppCompatActivity {
 
         mDataBaseHelper = new DataBaseHelper(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        ListView recordList = findViewById(R.id.lv_main);
-        //        mAdapter = new RecordListAdaptor(this, mRecordBeanList);
-        mAdapter = new RecordListAdaptor(this, SingleCommonData.getRecordList());
+        RecyclerView recordList = findViewById(R.id.rv_main);
+        mAdapter = new RecordRecycleAdaptor(this, SingleCommonData.getRecordList());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recordList.setLayoutManager(layoutManager);
         recordList.setAdapter(mAdapter);
 
-        // 单击ListView中元素删除记录
-        recordList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // 单击 RecyclerView 中元素删除记录
+        mAdapter.setOnClickListener(new RecordRecycleAdaptor.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
+            public void OnClick(int index) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Delete Record");
                 builder.setMessage("Are you sure to delete the record?");
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mDataBaseHelper.deleteOneRecord(position);
-                        SingleCommonData.remove(position);
+                        mDataBaseHelper.deleteOneRecord(i);
+                        SingleCommonData.removeRecord(i);
                         mAdapter.notifyDataSetChanged();
                     }
                 });
@@ -92,8 +96,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        // noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(MainActivity.this, ViewAccountsActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_chart) {
             Intent intent = new Intent(MainActivity.this, ChartsActivity.class);
@@ -138,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, ChartsActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.action_settings:
+                        intent = new Intent(MainActivity.this, ViewAccountsActivity.class);
+                        startActivity(intent);
                     default:break;
                 }
                 return true;
