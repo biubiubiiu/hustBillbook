@@ -11,10 +11,7 @@ public class TypeViewBean {
     private String typeName;
     private String typeImg;
 
-    public TypeViewBean(int id, String typeName, String typeImg) {
-        this.id = id;
-        this.typeName = typeName;
-        this.typeImg = typeImg;
+    public TypeViewBean() {
     }
 
     public int getId() {
@@ -29,4 +26,15 @@ public class TypeViewBean {
         return typeImg;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public void setTypeImg(String typeImg) {
+        this.typeImg = typeImg;
+    }
 }

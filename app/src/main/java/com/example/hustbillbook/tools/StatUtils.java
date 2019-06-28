@@ -3,7 +3,7 @@ package com.example.hustbillbook.tools;
 
 import android.util.SparseArray;
 
-import com.example.hustbillbook.TmpRepository;
+import com.example.hustbillbook.DataRepository;
 import com.example.hustbillbook.bean.RecordBean;
 import com.example.hustbillbook.bean.TypeRankBean;
 import com.example.hustbillbook.bean.TypeViewBean;
@@ -52,7 +52,7 @@ public class StatUtils {
     }
 
     private static void consBeanHelper(@NotNull Map<Integer, Float> map, List<TypeRankBean> list) {
-        TmpRepository r = TmpRepository.getInstance();
+        DataRepository r = DataRepository.getInstance();
         SparseArray<TypeViewBean> array = r.getAllRecordTypes();
         Iterator iter = map.entrySet().iterator();
         float sum = 0;

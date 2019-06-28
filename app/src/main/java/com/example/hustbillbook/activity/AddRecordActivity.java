@@ -1,5 +1,6 @@
 package com.example.hustbillbook.activity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.hustbillbook.DataBaseHelper;
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
-import com.example.hustbillbook.TmpRepository;
+import com.example.hustbillbook.DataRepository;
 import com.example.hustbillbook.adaptor.ViewPagerAdaptor;
 import com.example.hustbillbook.adaptor.TypeRecycleAdaptor;
 import com.example.hustbillbook.bean.RecordBean;
@@ -198,7 +199,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void initData() {
         page = 0;
         // TODO typeList 通过读取数据库完成初始化
-        TmpRepository r = TmpRepository.getInstance();
+        DataRepository r = DataRepository.getInstance();
         expenseTypeList = r.getAllExpenseTypes();
         incomeTypeList = r.getAllIncomeTypes();
     }
@@ -335,7 +336,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     private void handleNumInput(int num) {
         String curr = moneyTv.getText().toString();
-        if (Double.valueOf(curr) == 0.0) {
+        if ((curr.equals("0.00") || curr.equals("0")) && num != 0){
             moneyTv.setText(String.valueOf(num));
             return;
         }
@@ -393,5 +394,15 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                int position = data.getIntExtra("position" ,0);
+                accountTv.setText(SingleCommonData.accountAt(position).accountName);
+            }
+        }
     }
 }

@@ -49,6 +49,10 @@ public class SingleCommonData {
 
     public static void addRecord(RecordBean recordBean) { recordBeanList.add(recordBean); }
 
+    public static AccountBean accountAt(int position) {
+        return accountBeanList.get(position);
+    }
+
     public static void addAccount(@NotNull AccountBean accountBean){
         if (accountBean.accountName.equals("添加账户'"))
             accountBeanList.add(accountBean);
@@ -64,6 +68,23 @@ public class SingleCommonData {
         // 生成假数据，测试时使用
 
         // 通过数据库将查询数据，插入到List容器中
+        syncRecordList(dataBaseHelper);
+
+        // 查询数据库将账户信息添加到List容器中
+        syncAccountLIst(dataBaseHelper);
+
+        // 添加账户
+        AccountBean addAccountBean = new AccountBean();
+        addAccountBean.accountType = AccountBean.Type.ADDACCOUNT.getId();
+        addAccountBean.accountName = "添加账户";
+        addAccountBean.accountMoney = "";
+        addAccountBean.accountTitle = "";
+
+        //始终将添加账户加在最后
+        accountBeanList.add(addAccountBean);
+    }
+
+    public static void syncRecordList(@NotNull DataBaseHelper dataBaseHelper) {
         Cursor cursor = dataBaseHelper.getAllRecords();
         // 先清空一下数据，小心驶得万年船
         recordBeanList.clear();
@@ -80,8 +101,10 @@ public class SingleCommonData {
             }
             cursor.close();
         }
+    }
 
-        //查询数据库将账户信息添加到List容器中
+    public static void syncAccountLIst(@NotNull DataBaseHelper dataBaseHelper) {
+        Cursor cursor;
         cursor = dataBaseHelper.getAllAccounts();
         accountBeanList.clear();
         if (cursor!=null){
@@ -96,15 +119,5 @@ public class SingleCommonData {
             }
             cursor.close();
         }
-
-        // 添加账户
-        AccountBean addAccountBean = new AccountBean();
-        addAccountBean.accountType = AccountBean.Type.ADDACCOUNT.getId();
-        addAccountBean.accountName = "添加账户";
-        addAccountBean.accountMoney = "";
-        addAccountBean.accountTitle = "";
-
-        //始终将添加账户加在最后
-        accountBeanList.add(addAccountBean);
     }
 }

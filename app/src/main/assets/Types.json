@@ -1,0 +1,163 @@
+{
+  "expenseTypes": [
+    {
+      "id": "1",
+      "typeName": "餐饮",
+      "typeImg": "img_canyin"
+    },
+    {
+      "id": "2",
+      "typeName": "电影",
+      "typeImg": "img_dianying"
+    },
+    {
+      "id": "3",
+      "typeName": "房租",
+      "typeImg": "img_fangzu"
+    },
+    {
+      "id": "4",
+      "typeName": "红包",
+      "typeImg": "img_hongbao"
+    },
+    {
+      "id": "5",
+      "typeName": "话费",
+      "typeImg": "img_huafei"
+    },
+    {
+      "id": "6",
+      "typeName": "交通",
+      "typeImg": "img_jiaotong"
+    },
+    {
+      "id": "7",
+      "typeName": "零食",
+      "typeImg": "img_lingshi"
+    },
+    {
+      "id": "8",
+      "typeName": "其他",
+      "typeImg": "img_qita"
+    },
+    {
+      "id": "9",
+      "typeName": "生活用品",
+      "typeImg": "img_shenghuoyongpin"
+    },
+    {
+      "id": "10",
+      "typeName": "蔬菜",
+      "typeImg": "img_shucai"
+    },
+    {
+      "id": "11",
+      "typeName": "水果",
+      "typeImg": "img_shuiguo"
+    },
+    {
+      "id": "12",
+      "typeName": "淘宝",
+      "typeImg": "img_taobao"
+    },
+    {
+      "id": "13",
+      "typeName": "服饰",
+      "typeImg": "img_yifu"
+    },
+    {
+      "id": "14",
+      "typeName": "医疗",
+      "typeImg": "img_yiliao"
+    },
+    {
+      "id": "15",
+      "typeName": "转账",
+      "typeImg": "img_zhuanzhang"
+    }
+  ],
+  "incomeTypes": [
+    {
+      "id": "4",
+      "typeName": "红包",
+      "typeImg": "img_hongbao"
+    },
+    {
+      "id": "8",
+      "typeName": "其他",
+      "typeImg": "img_qita"
+    },
+    {
+      "id": "16",
+      "typeName": "工资",
+      "typeImg": "img_gongzi"
+    },
+    {
+      "id": "17",
+      "typeName": "奖金",
+      "typeImg": "img_jiangjin"
+    },
+    {
+      "id": "18",
+      "typeName": "兼职",
+      "typeImg": "img_jianzhi"
+    },
+    {
+      "id": "19",
+      "typeName": "零花钱",
+      "typeImg": "img_linghuaqian"
+    },
+    {
+      "id": "20",
+      "typeName": "生活费",
+      "typeImg": "img_shenghuofei"
+    },
+    {
+      "id": "21",
+      "typeName": "投资",
+      "typeImg": "img_touzi"
+    }
+  ],
+  "accountTypes": [
+    {
+      "id": "50",
+      "typeName": "储蓄卡",
+      "typeImg": "img_chuxukazhanghu"
+    },
+    {
+      "id": "51",
+      "typeName": "信用卡",
+      "typeImg": "img_xinyongkazhanghu"
+    },
+    {
+      "id": "52",
+      "typeName": "支付宝",
+      "typeImg": "img_zhifubaozhanghu"
+    },
+    {
+      "id": "53",
+      "typeName": "微信支付",
+      "typeImg": "img_weixinzhifu"
+    },
+    {
+      "id": "54",
+      "typeName": "现金",
+      "typeImg": "img_xianjinzhanghu"
+    },
+    {
+      "id": "55",
+      "typeName": "京东",
+      "typeImg": "img_jingdongzhanghu"
+    },
+    {
+      "id": "56",
+      "typeName": "其他",
+      "typeImg": "img_qita"
+    },
+    {
+      "id": "57",
+      "typeName": "添加账户",
+      "typeImg": "img_add_account"
+    }
+  ]
+}

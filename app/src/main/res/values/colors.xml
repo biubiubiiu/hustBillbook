@@ -3,6 +3,9 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#009688</color>
+    <color name="colorPrimaryLight">#B2DFDB</color>
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -11,4 +14,7 @@
     <color name="translucent">#80000000</color>
 
     <color name="dark_background">#FF424242</color>
+    <color name="backgroundBlue">#7EC0EE</color>
+    <color name="darkGray">#A9A9A9</color>
+    <color name="brightRed">#FF5252</color>
 </resources>

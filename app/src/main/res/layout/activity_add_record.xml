@@ -6,22 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.AddRecordActivity">
 
-    <include layout="@layout/app_toolbar">
-
-    </include>
-
-    <ImageView
-        android:id="@+id/btn_back"
-        android:layout_width="8dp"
-        android:layout_height="wrap_content"
-        android:contentDescription="@null"
-        android:src="@drawable/img_back"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        app:layout_constraintHorizontal_bias="0.03"
-        app:layout_constraintLeft_toLeftOf="@id/toolbar"
-        app:layout_constraintRight_toRightOf="@id/toolbar"
-        app:layout_constraintTop_toTopOf="@id/toolbar">
-    </ImageView>
+    <include layout="@layout/app_toolbar" />
 
     <TextView
         android:id="@+id/tv_expense"
@@ -74,8 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="horizontal">
-        </LinearLayout>
+            android:orientation="horizontal"></LinearLayout>
 
     </RelativeLayout>
 
@@ -132,6 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:clickable="false"
+        android:contentDescription="@null"
         android:scaleX="0.5"
         android:scaleY="0.5"
         android:src="@drawable/img_remark"
@@ -148,9 +133,9 @@
         android:text="@string/beizhu"
         android:textAlignment="center"
         android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_remark"
         app:layout_constraintStart_toEndOf="@id/iv_remark"
-        app:layout_constraintTop_toTopOf="@id/iv_remark"
-        app:layout_constraintBottom_toBottomOf="@id/iv_remark"/>
+        app:layout_constraintTop_toTopOf="@id/iv_remark" />
 
     <EditText
         android:id="@+id/et_record_title"
@@ -161,9 +146,9 @@
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_record_title"
         app:layout_constraintStart_toEndOf="@id/tv_record_title"
-        app:layout_constraintTop_toTopOf="@id/tv_record_title"
-        app:layout_constraintBottom_toBottomOf="@id/tv_record_title"/>
+        app:layout_constraintTop_toTopOf="@id/tv_record_title" />
 
     <TextView
         android:id="@+id/tv_calc_btn1"
@@ -344,6 +329,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/tv_calc_btn_selector"
+        android:contentDescription="@null"
         android:onClick="onClick"
         android:scaleX="0.35"
         android:scaleY="0.35"

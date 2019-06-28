@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:gravity="center"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/textPrimary"
             android:textSize="24sp"
             android:textStyle="bold"
             tools:text="04-26" />
@@ -28,6 +28,7 @@
             android:id="@+id/tv_date_year"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
+            android:textColor="@color/textSecondary"
             android:gravity="top"
             android:textSize="18sp"
             tools:text="2019" />
@@ -61,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:gravity="bottom"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/textPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:text="奖金" />
@@ -71,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
+            android:textColor="@color/textSecondary"
             android:singleLine="true"
             android:textSize="18sp"
             tools:text="2018年度奖金" />

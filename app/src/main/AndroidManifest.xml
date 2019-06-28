@@ -29,6 +29,7 @@
         <activity android:name=".activity.SelectAccountActivity"/>
         <activity android:name=".activity.ViewAccountsActivity" />
         <activity android:name=".activity.ViewSpecificAccountActivity" />
+        <activity android:name=".activity.EditAccountActivity" />
 
     </application>
 

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.bean.AccountBean;
 
-public class AddAccountActivity extends AppCompatActivity {
+public class AddAccountActivity extends AppCompatActivity implements View.OnClickListener{
     final int MAX_INTEGER_LENGTH = 8;
     final int MAX_DECIMAL_LENGTH = 2;
     //设置账户金额整数部分最大8位，小数部分最大2位
@@ -39,6 +38,8 @@ public class AddAccountActivity extends AppCompatActivity {
     private TextView type_wechatpay;
     private TextView type_jdpay;
     private TextView type_qita;
+
+    private ImageView btn_back;
 
     private String name;
     private String note;
@@ -61,6 +62,17 @@ public class AddAccountActivity extends AppCompatActivity {
         type_wechatpay = findViewById(R.id.tv_weixinzhifu);
         type_jdpay = findViewById(R.id.tv_jingdongjinrong);
         type_qita = findViewById(R.id.tv_qita);
+
+        btn_back = findViewById(R.id.btn_back);
+
+        type_cash.setOnClickListener(this);
+        type_card.setOnClickListener(this);
+        type_credit.setOnClickListener(this);
+        type_alipay.setOnClickListener(this);
+        type_wechatpay.setOnClickListener(this);
+        type_jdpay.setOnClickListener(this);
+        type_qita.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
 
         //默认选中现金账户类别
         type_cash.setSelected(true);
@@ -85,8 +97,8 @@ public class AddAccountActivity extends AppCompatActivity {
                     name = accName.getText().toString();
                     money = accMoney.getText().toString();
                     note = accNote.getText().toString();
-                    //type值已取得
 
+                    //type值已取得
                     AccountBean accountBean = new AccountBean();
                     accountBean.accountName = name;
                     accountBean.accountMoney = money;
@@ -103,8 +115,6 @@ public class AddAccountActivity extends AppCompatActivity {
 
                     //结束活动，返回调用者
                     finish();
-
-                    //TODO 返回调用界面
                 }
             }
         });
@@ -143,75 +153,8 @@ public class AddAccountActivity extends AppCompatActivity {
                     if (curr.length() - 1 - dotIndex > MAX_DECIMAL_LENGTH)
                         editable.delete(dotIndex + 3, dotIndex + 4);
                 }
-
-
             }
         });
-
-
-        type_cash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_cash.setSelected(true);
-                type = AccountBean.Type.XIANJIN.getId();
-            }
-        });
-
-        type_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_card.setSelected(true);
-                type = AccountBean.Type.CHUXUKA.getId();
-            }
-        });
-
-        type_credit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_credit.setSelected(true);
-                type = AccountBean.Type.XINYONGKA.getId();
-            }
-        });
-
-        type_alipay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_alipay.setSelected(true);
-                type = AccountBean.Type.ZHIFUBAO.getId();
-            }
-        });
-
-        type_wechatpay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_wechatpay.setSelected(true);
-                type = AccountBean.Type.WEIXINZHIFU.getId();
-            }
-        });
-
-        type_jdpay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_jdpay.setSelected(true);
-                type = AccountBean.Type.JINGDONG.getId();
-            }
-        });
-
-        type_qita.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setStatusAllFalse();
-                type_qita.setSelected(true);
-                type = AccountBean.Type.QITA.getId();
-            }
-        });
-
     }
 
     //先将全部设为false，再将被选中的设为true
@@ -227,13 +170,54 @@ public class AddAccountActivity extends AppCompatActivity {
 
     //新增处理返回键
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-
             AddAccountActivity.this.setResult(RESULT_CANCELED);
-
             AddAccountActivity.this.finish();
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_xianjin:
+                setStatusAllFalse();
+                type_cash.setSelected(true);
+                type = AccountBean.Type.XIANJIN.getId();
+                break;
+            case R.id.tv_chuxuka:
+                setStatusAllFalse();
+                type_card.setSelected(true);
+                type = AccountBean.Type.CHUXUKA.getId();
+                break;
+            case R.id.tv_xinyongka:
+                setStatusAllFalse();
+                type_credit.setSelected(true);
+                type = AccountBean.Type.XINYONGKA.getId();
+                break;
+            case R.id.tv_zhifubao:
+                setStatusAllFalse();
+                type_alipay.setSelected(true);
+                type = AccountBean.Type.ZHIFUBAO.getId();
+                break;
+            case R.id.tv_weixinzhifu:
+                setStatusAllFalse();
+                type_wechatpay.setSelected(true);
+                type = AccountBean.Type.WEIXINZHIFU.getId();
+                break;
+            case R.id.tv_jingdongjinrong:
+                setStatusAllFalse();
+                type_jdpay.setSelected(true);
+                type = AccountBean.Type.JINGDONG.getId();
+                break;
+            case R.id.tv_qita:
+                setStatusAllFalse();
+                type_qita.setSelected(true);
+                type = AccountBean.Type.QITA.getId();
+                break;
+            case R.id.btn_back:
+                this.finish();
+                break;
+        }
     }
 }

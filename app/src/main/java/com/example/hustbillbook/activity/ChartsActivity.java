@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,8 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     private TextView weekTv;
     private TextView monthTv;
     private TextView yearTv;
+
+    private ImageView btn_back;
 
     private TabLayout mTabTl;
     private ViewPager viewPager;
@@ -106,6 +109,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         monthTv = findViewById(R.id.tv_month_chart);
         yearTv = findViewById(R.id.tv_year_chart);
         mTabTl = findViewById(R.id.tl_tab);
+        btn_back = findViewById(R.id.btn_back);
         viewPager = findViewById(R.id.vp_ranking);
     }
 
@@ -113,6 +117,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         weekTv.setOnClickListener(this);
         monthTv.setOnClickListener(this);
         yearTv.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
     }
 
     private void initWidget() {
@@ -374,6 +379,9 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                 generateChart();
                 }
                 yearTv.setSelected(true);
+                break;
+            case R.id.btn_back:
+                this.finish();
                 break;
         }
     }

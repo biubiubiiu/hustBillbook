@@ -8,7 +8,6 @@ import com.example.hustbillbook.activity.AddRecordActivity;
 import com.example.hustbillbook.activity.ChartsActivity;
 import com.example.hustbillbook.activity.ViewAccountsActivity;
 import com.example.hustbillbook.adaptor.RecordRecycleAdaptor;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         RecyclerView recordList = findViewById(R.id.rv_main);
+
         mAdapter = new RecordRecycleAdaptor(this, SingleCommonData.getRecordList());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recordList.setLayoutManager(layoutManager);
@@ -50,15 +49,15 @@ public class MainActivity extends AppCompatActivity {
         // 单击 RecyclerView 中元素删除记录
         mAdapter.setOnClickListener(new RecordRecycleAdaptor.OnClickListener() {
             @Override
-            public void OnClick(int index) {
+            public void OnClick(final int index) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Delete Record");
                 builder.setMessage("Are you sure to delete the record?");
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mDataBaseHelper.deleteOneRecord(i);
-                        SingleCommonData.removeRecord(i);
+                        mDataBaseHelper.deleteOneRecord(index);
+                        SingleCommonData.removeRecord(index);
                         mAdapter.notifyDataSetChanged();
                     }
                 });
@@ -110,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         mAdapter.notifyDataSetChanged();
     }
 
