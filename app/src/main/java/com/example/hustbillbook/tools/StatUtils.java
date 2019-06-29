@@ -10,12 +10,29 @@ import com.example.hustbillbook.bean.TypeViewBean;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StatUtils {
+
+    /**
+     * 按日期范围筛选数据
+     * @param data  所有数据
+     * @param keys  日期范围，需要与 recordBean 中的日期表示一致
+     * @return  筛选结果
+     */
+    public static List<RecordBean> filterByDate(@NotNull List<RecordBean> data, List<String> keys) {
+        List<RecordBean> result = new ArrayList<>();
+        for (RecordBean bean : data) {
+            if (keys.contains(bean.recordDate)) {
+                result.add(bean);
+            }
+        }
+        return result;
+    }
 
     /**
      * 按类别合并数据
@@ -51,12 +68,13 @@ public class StatUtils {
         consBeanHelper(incomeMap, income);
     }
 
-    private static void consBeanHelper(@NotNull Map<Integer, Float> map, List<TypeRankBean> list) {
+    private static void consBeanHelper(@NotNull Map<Integer, Float> map, @NotNull List<TypeRankBean> list) {
         DataRepository r = DataRepository.getInstance();
         SparseArray<TypeViewBean> array = r.getAllRecordTypes();
         Iterator iter = map.entrySet().iterator();
         float sum = 0;
 
+        list.clear();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry) iter.next();
             list.add(new TypeRankBean(array.get((Integer) entry.getKey()),

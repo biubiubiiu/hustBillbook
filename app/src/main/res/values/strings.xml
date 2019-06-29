@@ -37,6 +37,8 @@
     <string name="number_percentage">%1$.1f%%</string>
     <string name="string_account_note">备注:%1$s</string>
     <string name="string_account_money">金额：%1$f</string>
+    <string name="positive_number">+%1$s</string>
+    <string name="negative_number">-%1$s</string>
     <!--以下是以中文拼音命名的变量-->
     <string name="canyin">餐饮</string>
     <string name="dianying">电影</string>

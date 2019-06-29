@@ -6,7 +6,6 @@ import android.database.Cursor;
 import com.example.hustbillbook.bean.AccountBean;
 import com.example.hustbillbook.bean.RecordBean;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,23 +18,22 @@ import java.util.List;
 public class SingleCommonData {
 
     // 存放所有账单记录
-    private static List<RecordBean> recordBeanList = new ArrayList<>();
+    private static final List<RecordBean> recordBeanList = new ArrayList<>();
 
     // 存放所有账户
-    private static List<AccountBean> accountBeanList = new ArrayList<>();
+    private static final List<AccountBean> accountBeanList = new ArrayList<>();
 
     // 让构造函数为private，这样该类就不会被实例化
-    private SingleCommonData() {}
+    private SingleCommonData() {
+    }
 
     // 获取账单记录
-    @Contract(pure = true)
     public static List<RecordBean> getRecordList() {
         return recordBeanList;
     }
 
     // 获取所有账户
-    @Contract(pure = true)
-    public static List<AccountBean> getAccountList(){
+    public static List<AccountBean> getAccountList() {
         return accountBeanList;
     }
 
@@ -43,17 +41,23 @@ public class SingleCommonData {
         recordBeanList.remove(positon);
     }
 
-    public static void removeAccount(int position){
+    public static void removeAccount(int position) {
         accountBeanList.remove(position);
     }
 
-    public static void addRecord(RecordBean recordBean) { recordBeanList.add(recordBean); }
+    public static void addRecord(RecordBean recordBean) {
+        recordBeanList.add(recordBean);
+    }
+
+    public static RecordBean recordAt(int position) {
+        return recordBeanList.get(position);
+    }
 
     public static AccountBean accountAt(int position) {
         return accountBeanList.get(position);
     }
 
-    public static void addAccount(@NotNull AccountBean accountBean){
+    public static void addAccount(@NotNull AccountBean accountBean) {
         if (accountBean.accountName.equals("添加账户'"))
             accountBeanList.add(accountBean);
         else
@@ -63,15 +67,29 @@ public class SingleCommonData {
     public static void initData(Context context) {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         // 每次启动时删除数据库中所有内容，测试时使用
-        dataBaseHelper.deleteAllRecords();
-        dataBaseHelper.deleteAllAccounts();
+        //        dataBaseHelper.deleteAllRecords();
+        //        dataBaseHelper.deleteAllAccounts();
         // 生成假数据，测试时使用
 
         // 通过数据库将查询数据，插入到List容器中
         syncRecordList(dataBaseHelper);
 
         // 查询数据库将账户信息添加到List容器中
-        syncAccountLIst(dataBaseHelper);
+        syncAccountList(dataBaseHelper);
+
+        //------------------------------------------------------------------------------------------
+        if (accountBeanList.size() == 0) {
+            //如果没有账户信息，则添加一个初始账户
+            AccountBean accountBean = new AccountBean();
+            accountBean.accountName = "现金";
+            accountBean.accountMoney = "0";
+            accountBean.accountTitle = "现金账户";
+            accountBean.accountType = AccountBean.Type.XIANJIN.getId();
+
+            accountBeanList.add(accountBean);
+            dataBaseHelper.insertAccount(accountBean);
+        }
+        //------------------------------------------------------------------------------------------
 
         // 添加账户
         AccountBean addAccountBean = new AccountBean();
@@ -93,7 +111,7 @@ public class SingleCommonData {
                 RecordBean recordBean = new RecordBean();
                 recordBean.recordType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.RECORD_TYPE));
                 recordBean.recordTitle = cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_TITLE));
-                recordBean.recordDate= cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_DATE));
+                recordBean.recordDate = cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_DATE));
                 recordBean.recordMoney = cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_MONEY));
                 recordBean.isExpense = cursor.getString(cursor.getColumnIndex(DataBaseHelper.RECORD_ISEXPENSE)).equals("1");
                 recordBean.recordAccount = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.RECORD_ACCOUNT));
@@ -103,12 +121,12 @@ public class SingleCommonData {
         }
     }
 
-    public static void syncAccountLIst(@NotNull DataBaseHelper dataBaseHelper) {
+    public static void syncAccountList(@NotNull DataBaseHelper dataBaseHelper) {
         Cursor cursor;
         cursor = dataBaseHelper.getAllAccounts();
         accountBeanList.clear();
-        if (cursor!=null){
-            while (cursor.moveToNext()){
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 AccountBean accountBean = new AccountBean();
                 accountBean.accountType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.ACCOUNT_TYPE));
                 accountBean.accountName = cursor.getString(cursor.getColumnIndex(DataBaseHelper.ACCOUNT_NAME));

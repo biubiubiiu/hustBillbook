@@ -14,14 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,15 +40,33 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         RecyclerView recordList = findViewById(R.id.rv_main);
 
+        /*
+         * Modified On 29/06
+         */
         mAdapter = new RecordRecycleAdaptor(this, SingleCommonData.getRecordList());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setSmoothScrollbarEnabled(true);
         recordList.setLayoutManager(layoutManager);
+        recordList.setHasFixedSize(true);
+        recordList.setItemAnimator(new DefaultItemAnimator());
         recordList.setAdapter(mAdapter);
 
-        // 单击 RecyclerView 中元素删除记录
+        /*
+         * Modified On 29/06
+         */
         mAdapter.setOnClickListener(new RecordRecycleAdaptor.OnClickListener() {
             @Override
+            // 单击修改记录
             public void OnClick(final int index) {
+                Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
+                intent.putExtra("handleType", 3);
+                intent.putExtra("index", index);
+                startActivity(intent);
+            }
+
+            @Override
+            // 长按 RecyclerView 中元素删除记录
+            public void OnLongClick(final int index) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Delete Record");
                 builder.setMessage("Are you sure to delete the record?");
@@ -72,15 +89,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
+                //----------------------------------------------------------------------------------------
+                intent.putExtra("handleType", 1);//对应第一种情况，简单的添加
+                //-----------------------------------------------------------------------------------------
                 startActivity(intent);
-            }
-        });
-
-        ImageView imageView = findViewById(R.id.popupMenu);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMenu(view);
             }
         });
     }
@@ -104,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -128,28 +139,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).setNegativeButton("Cancel", null);
         builder.create().show();
-    }
-
-    //设置左下角弹出式菜单
-    public void showMenu(View v){
-        PopupMenu popupMenu = new PopupMenu(this,v);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_main,popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_chart:
-                        Intent intent = new Intent(MainActivity.this, ChartsActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.action_settings:
-                        intent = new Intent(MainActivity.this, ViewAccountsActivity.class);
-                        startActivity(intent);
-                    default:break;
-                }
-                return true;
-            }
-        });
-        popupMenu.show();
     }
 }

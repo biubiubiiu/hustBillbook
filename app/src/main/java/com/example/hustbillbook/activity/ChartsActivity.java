@@ -6,7 +6,7 @@ import com.example.hustbillbook.adaptor.RankViewPagerAdaptor;
 import com.example.hustbillbook.adaptor.RankRecycleAdaptor;
 import com.example.hustbillbook.bean.RecordBean;
 import com.example.hustbillbook.bean.TypeRankBean;
-import com.example.hustbillbook.tools.CalenderUtils;
+import com.example.hustbillbook.tools.CalendarUtils;
 import com.example.hustbillbook.tools.StatUtils;
 import com.google.android.material.tabs.TabLayout;
 
@@ -37,11 +37,11 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-public class ChartsActivity extends AppCompatActivity implements View.OnClickListener{
+public class ChartsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ColumnChartView mChart;
-    private Map<String, Float> tableExpense = new TreeMap<>();   // 使用TreeMap，避免手动排序
-    private Map<String, Float> tableIncome = new TreeMap<>();
+    private final Map<String, Float> tableExpense = new TreeMap<>();   // 使用TreeMap，避免手动排序
+    private final Map<String, Float> tableIncome = new TreeMap<>();
     private ColumnChartData mData;
 
     private float maxValue;          //用于保存Y轴的最大值，用于设置Y轴的上下限
@@ -59,10 +59,12 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
 
     private List<TypeRankBean> rankedExpenseList;
     private List<TypeRankBean> rankedIncomeList;
+    private List<RecordBean> partialData;
 
     private enum Page {
         Week, Month, Year
     }
+
     private Page currentPage;
 
     @Override
@@ -78,21 +80,36 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-        List<RecordBean> allData = SingleCommonData.getRecordList();
 
         weekTv.setSelected(true);
         currentPage = Page.Week;
 
         // 按日期合并记录，存放到两个 map 中
-        StatUtils.mergeByDate(allData, tableExpense, tableIncome);
+        StatUtils.mergeByDate(SingleCommonData.getRecordList(), tableExpense, tableIncome);
         generateWeekChart();
 
         // 按类型合并记录，存放到两个 list 中
-        StatUtils.mergeByType(allData, rankedExpenseList, rankedIncomeList);
+        resetRankData();
         initViewPager();
 
         // 必须在 viewPager 设置 adaptor 后使用
         mTabTl.setupWithViewPager(viewPager);
+    }
+
+    private void resetRankData() {
+        List<RecordBean> allData = SingleCommonData.getRecordList();
+        switch (currentPage) {
+            case Week:
+                partialData = StatUtils.filterByDate(allData, CalendarUtils.getWeekDays());
+                break;
+            case Month:
+                partialData = StatUtils.filterByDate(allData, CalendarUtils.getMonthDays());
+                break;
+            case Year:
+                partialData = StatUtils.filterByDate(allData, CalendarUtils.getYearDays());
+                break;
+        }
+        StatUtils.mergeByType(partialData, rankedExpenseList, rankedIncomeList);
     }
 
     private void initData() {
@@ -126,12 +143,13 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initViewPager() {
         LayoutInflater inflater = this.getLayoutInflater(); // 获得一个视图管理器
+
         // TODO 考虑使用 Fragment 以提高性能
         List<View> viewList = new ArrayList<>();   //创建一个存放view的集合对象
 
         for (int i = 0; i < 2; i++) {
             View view = inflater.inflate(R.layout.item_ranking_page, viewPager, false);
-            
+
             // 使用 RecyclerView 代替 ListView
             RecyclerView recyclerView = view.findViewById(R.id.page_ranking_recycle);
 
@@ -147,7 +165,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
             recyclerView.setAdapter(adaptor);
             viewList.add(view);
         }
-        
+
         viewPager.setAdapter(new RankViewPagerAdaptor(viewList));
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(1); // 预加载数据页
@@ -172,7 +190,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         // 先清空图表内容
         clearData();
         // 获取当前周所有日期
-        List<String> weekDays= CalenderUtils.getWeekDays();
+        List<String> weekDays = CalendarUtils.getWeekDays();
         // 填充坐标轴
         fillWeeklyAxisXValues(weekDays);
         // 填充坐标数据
@@ -184,7 +202,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     // 生成月度账单分析
     private void generateMonthChart() {
         clearData();
-        List<String> monthDays = CalenderUtils.getMonthDays();
+        List<String> monthDays = CalendarUtils.getMonthDays();
         fillMonthlyAxisXValues(monthDays);
         fillPointValues(monthDays, false);
         drawChart();
@@ -193,7 +211,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     // 生成年度账单分析
     private void generateYearChart() {
         clearData();
-        List<String> yearDays = CalenderUtils.getYearDays();
+        List<String> yearDays = CalendarUtils.getYearDays();
         fillYearlyAxisXValues();
         fillPointValues(yearDays, true);
         drawChart();
@@ -216,19 +234,19 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         axisX.setHasLines(false);
 
         List<AxisValue> values = new ArrayList<>();
-        if (maxValue == 0){
-            int[] dataY = {-100,-75,-50,-25,0,25,50,75,100};
-            for (int value: dataY) {
+        if (maxValue == 0) {
+            int[] dataY = {-100, -75, -50, -25, 0, 25, 50, 75, 100};
+            for (int value : dataY) {
                 values.add(new AxisValue(value));
             }
             axisY.setValues(values);
             maxValue = 100;
         } else {
-            int m = (int)Math.ceil(maxValue/1.0);
+            int m = (int) Math.ceil(maxValue / 1.0);
             maxValue = m;
             m = -m;
-            int[] dataY = { m, m*3/4, m*2/4, m/4, 0, Math.abs(m/4), Math.abs(m*2/4), Math.abs(m*3/4), Math.abs(m) };
-            for (int value: dataY)
+            int[] dataY = {m, m * 3 / 4, m * 2 / 4, m / 4, 0, Math.abs(m / 4), Math.abs(m * 2 / 4), Math.abs(m * 3 / 4), Math.abs(m)};
+            for (int value : dataY)
                 values.add(new AxisValue(value));
             axisY.setValues(values);
         }
@@ -252,7 +270,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
 
     private void fillWeeklyAxisXValues(@NotNull List<String> days) {
         // 获取今天日期
-        String today = CalenderUtils.getCurrentDate();
+        String today = CalendarUtils.getCurrentDate();
         for (int i = 0; i < days.size(); i++) {
             String day = days.get(i);
             if (day.equals(today)) {
@@ -282,24 +300,24 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void fillPointValues(List<String> days, boolean isYearReport){
+    private void fillPointValues(List<String> days, boolean isYearReport) {
         float currentValue;//记录当前值，与maxValue比较
         List<SubcolumnValue> subcolumnValueList;
 
         if (!isYearReport) {
-            for (int i = 0; i < days.size(); i++){
+            for (int i = 0; i < days.size(); i++) {
                 subcolumnValueList = new ArrayList<>();
                 SubcolumnValue subIncome = new SubcolumnValue();
                 SubcolumnValue subExpense = new SubcolumnValue();
 
                 // 支出为正，显示在上方
-                currentValue = tableExpense.getOrDefault(days.get(i) ,(float)0.0);
+                currentValue = tableExpense.getOrDefault(days.get(i), (float) 0.0);
                 maxValue = Math.max(maxValue, currentValue);
                 subExpense.setValue(currentValue);
                 subExpense.setColor(Color.RED);
 
                 // 收入显示在下方
-                currentValue = tableIncome.getOrDefault(days.get(i), (float)0.0);
+                currentValue = tableIncome.getOrDefault(days.get(i), (float) 0.0);
                 maxValue = Math.max(maxValue, currentValue);
                 subIncome.setValue(-currentValue);
                 subIncome.setColor(Color.GREEN);
@@ -341,8 +359,8 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                     sumExpense = 0;
                     sumIncome = 0;
                 }
-                sumExpense += tableExpense.getOrDefault(day, (float)0.0);
-                sumIncome += tableIncome.getOrDefault(day, (float)0.0);
+                sumExpense += tableExpense.getOrDefault(day, (float) 0.0);
+                sumIncome += tableIncome.getOrDefault(day, (float) 0.0);
             }
         }
     }
@@ -363,6 +381,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                 if (currentPage != Page.Week) {
                     currentPage = Page.Week;
                     generateChart();
+                    resetRank();
                 }
                 weekTv.setSelected(true);
                 break;
@@ -374,9 +393,9 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                 monthTv.setSelected(true);
                 break;
             case R.id.tv_year_chart:
-                if (currentPage != Page.Year){
-                currentPage = Page.Year;
-                generateChart();
+                if (currentPage != Page.Year) {
+                    currentPage = Page.Year;
+                    generateChart();
                 }
                 yearTv.setSelected(true);
                 break;
@@ -384,5 +403,10 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                 this.finish();
                 break;
         }
+    }
+
+    private void resetRank() {
+        resetRankData();
+        initViewPager();
     }
 }

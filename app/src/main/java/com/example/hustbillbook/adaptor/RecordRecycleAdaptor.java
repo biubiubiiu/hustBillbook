@@ -18,11 +18,11 @@ import com.example.hustbillbook.tools.ImageUtils;
 
 import java.util.List;
 
-public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdaptor.ViewHolder>{
+public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdaptor.ViewHolder> {
 
     private List<RecordBean> mList;   // 数据源
-    private MainActivity mContext;
-    private LayoutInflater mInflater;     // 布局装载器对象
+    private final MainActivity mContext;
+    private final LayoutInflater mInflater;     // 布局装载器对象
 
     private OnClickListener mListener;
 
@@ -59,7 +59,14 @@ public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdap
         holder.mTvRecordType_text.setText(typeViewBean.getTypeName());
 
         holder.mTvRecordTitle.setText(bean.recordTitle);
-        holder.mTcRecordMoney.setText(bean.recordMoney);
+
+        //显示时在前面加正负号
+        //------------------------------------------------------------------------------------------
+        if (bean.isExpense)
+            holder.mTcRecordMoney.setText(mContext.getString(R.string.negative_number, bean.recordMoney));
+        else
+            holder.mTcRecordMoney.setText(mContext.getString(R.string.positive_number, bean.recordMoney));
+        //------------------------------------------------------------------------------------------
     }
 
     @Override
@@ -67,18 +74,14 @@ public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdap
         return (mList == null ? 0 : mList.size());
     }
 
-    public void setList(List<RecordBean> mList) {
-        this.mList = mList;
-    }
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        private TextView mTvRecordDate_monthAndDay;
-        private TextView mTvRecordDate_year;
-        private ImageView mTvRecordType_image;
-        private TextView mTvRecordType_text;
-        private TextView mTvRecordTitle;
-        private TextView mTcRecordMoney;
+        private final TextView mTvRecordDate_monthAndDay;
+        private final TextView mTvRecordDate_year;
+        private final ImageView mTvRecordType_image;
+        private final TextView mTvRecordType_text;
+        private final TextView mTvRecordTitle;
+        private final TextView mTcRecordMoney;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,15 +94,30 @@ public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdap
             mTcRecordMoney = itemView.findViewById(R.id.tv_cost);
 
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             mListener.OnClick(getAdapterPosition());
         }
+
+        /*
+        * Modified On 29/06
+        */
+        @Override
+        public boolean onLongClick(View view) {
+            mListener.OnLongClick(getAdapterPosition());
+            return false;
+        }
     }
 
+    /*
+     * Modified On 29/06
+     */
     public interface OnClickListener {
         void OnClick(int index);
+
+        void OnLongClick(int index);
     }
 }

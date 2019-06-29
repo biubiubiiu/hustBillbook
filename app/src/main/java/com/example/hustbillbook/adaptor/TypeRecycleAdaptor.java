@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class TypeRecycleAdaptor extends RecyclerView.Adapter<TypeRecycleAdaptor.ViewHolder> {
 
-    private AddRecordActivity mContext;
-    private LayoutInflater mInflater;
-    private List<TypeViewBean> mData;
+    private final AddRecordActivity mContext;
+    private final LayoutInflater mInflater;
+    private final List<TypeViewBean> mData;
 
     private OnClickListener mListener;
 
@@ -58,8 +58,8 @@ public class TypeRecycleAdaptor extends RecyclerView.Adapter<TypeRecycleAdaptor.
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView title;
-        private ImageView img;
+        private final TextView title;
+        private final ImageView img;
 
         ViewHolder(@NonNull View view) {
             super(view);

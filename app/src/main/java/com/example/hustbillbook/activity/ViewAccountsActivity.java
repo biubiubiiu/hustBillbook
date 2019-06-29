@@ -68,10 +68,8 @@ public class ViewAccountsActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_back:
-                this.finish();
-                break;
+        if (view.getId() == R.id.btn_back) {
+            this.finish();
         }
     }
 }

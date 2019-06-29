@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CalenderUtils {
+public class CalendarUtils {
 
     @org.jetbrains.annotations.NotNull
     public static String getCurrentDate() {

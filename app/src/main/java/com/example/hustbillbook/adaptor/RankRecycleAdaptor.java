@@ -19,8 +19,8 @@ import java.util.List;
 
 public class RankRecycleAdaptor extends RecyclerView.Adapter<RankRecycleAdaptor.ViewHolder> {
 
-    private ChartsActivity mContext;
-    private LayoutInflater mInflater;
+    private final ChartsActivity mContext;
+    private final LayoutInflater mInflater;
     private List<TypeRankBean> mData;
 
     public RankRecycleAdaptor(ChartsActivity mContext) {
@@ -41,7 +41,7 @@ public class RankRecycleAdaptor extends RecyclerView.Adapter<RankRecycleAdaptor.
         holder.img.setImageDrawable(ImageUtils.getDrawable(mContext, mData.get(position).getTypeView().getTypeImg()));
         holder.number.setText(String.valueOf(mData.get(position).getNumber()));
         holder.ratio.setText(mContext.getString(R.string.number_percentage, mData.get(position).getRatio()*100));
-        holder.bar.setProgress((int)mData.get(position).getRatio()*100);
+        holder.bar.setProgress((int)(mData.get(position).getRatio()*100));
     }
 
     @Override
@@ -55,11 +55,11 @@ public class RankRecycleAdaptor extends RecyclerView.Adapter<RankRecycleAdaptor.
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView typeName;
-        private TextView number;
-        private TextView ratio;
-        private ImageView img;
-        private ProgressBar bar;
+        private final TextView typeName;
+        private final TextView number;
+        private final TextView ratio;
+        private final ImageView img;
+        private final ProgressBar bar;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);

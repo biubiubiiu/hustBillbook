@@ -18,14 +18,14 @@ import java.util.List;
 
 public class DataRepository {
 
-    private List<TypeViewBean> allExpenseTypes;
-    private List<TypeViewBean> allIncomeTypes;
+    private final List<TypeViewBean> allExpenseTypes;
+    private final List<TypeViewBean> allIncomeTypes;
 
     // allRecordTypes = allExpenseTypes + allIncomeTypes
     // 使用 SparseArray 替代 HashMap 以提高性能
-    private SparseArray<TypeViewBean> allRecordTypes;
+    private final SparseArray<TypeViewBean> allRecordTypes;
 
-    private List<TypeViewBean> allAccountTypes;
+    private final List<TypeViewBean> allAccountTypes;
 
     private static DataRepository instance;
 

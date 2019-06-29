@@ -5,7 +5,7 @@ import com.example.hustbillbook.bean.RecordBean;
 public class TreeNode {
     //将recordBean和title统一处理
 
-    public boolean isParent;//是否为父节点
+    public final boolean isParent;//是否为父节点
 
     //父节点对应的参数
     public boolean isExpand;//是否展开

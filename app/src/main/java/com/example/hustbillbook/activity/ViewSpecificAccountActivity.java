@@ -12,16 +12,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.hustbillbook.DataBaseHelper;
-import com.example.hustbillbook.DataRepository;
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.TreeNode;
 import com.example.hustbillbook.adaptor.ItemToAccountAdaptor;
 import com.example.hustbillbook.bean.AccountBean;
 import com.example.hustbillbook.bean.RecordBean;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ViewSpecificAccountActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -43,6 +44,8 @@ public class ViewSpecificAccountActivity extends AppCompatActivity implements Vi
     private TextView btn_edit;
     private ImageView btn_back;
 
+    private FloatingActionButton fab;
+
     private AccountBean currentAccount;
 
     public static final int RESULT_MODIFY = 10;
@@ -61,14 +64,17 @@ public class ViewSpecificAccountActivity extends AppCompatActivity implements Vi
         showYear = findViewById(R.id.year_Specific);
         listView = findViewById(R.id.listView2);
 
+        fab = findViewById(R.id.fab_Specific);
+
+
         btn_edit = findViewById(R.id.setting_Specific);
-        btn_back = findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back_Specific);
 
         btn_edit.setOnClickListener(this);
         btn_back.setOnClickListener(this);
 
         Intent intent = getIntent();
-        numberOfAccountBean = intent.getExtras().getInt("account_id");
+        numberOfAccountBean = Objects.requireNonNull(intent.getExtras()).getInt("account_id");
 
         currentAccount = SingleCommonData.getAccountList().get(numberOfAccountBean);
         //获取当前账户
@@ -110,6 +116,20 @@ public class ViewSpecificAccountActivity extends AppCompatActivity implements Vi
                 adapter.notifyDataSetChanged();
             }
         });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //-----------------------------------------------------------------------------------------------------
+                Intent intent1 = new Intent(ViewSpecificAccountActivity.this, AddRecordActivity.class);
+                intent1.putExtra("handleType", 2);//第二种情况，对应账户下的添加，账户名不可改
+                intent1.putExtra("accountNum", numberOfAccountBean);
+                startActivity(intent1);
+                //TODO 是否需要更改为forResult
+
+                //------------------------------------------------------------------------------------------------------
+            }
+        });
     }
 
     private void setChildrenStatus(int position, boolean status) {
@@ -142,6 +162,11 @@ public class ViewSpecificAccountActivity extends AppCompatActivity implements Vi
             //TODO 账户信息判断，是否为当前账户
             if (r.recordDate.split("-")[0].equals(year)) {
                 if (1 == flag) flag = 2;//已进入对应年份
+
+                //----------------------------------------------------------------------------------
+                if (r.recordAccount != numberOfAccountBean)
+                    continue;   //如果不是当前账户下的，则跳过
+                //----------------------------------------------------------------------------------
 
                 if (!month.equals(currmonth)) {
                     //已经遍历完一个月的记录
@@ -197,7 +222,7 @@ public class ViewSpecificAccountActivity extends AppCompatActivity implements Vi
                 case RESULT_DELETE:
                     DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
 
-                    SingleCommonData.syncAccountLIst(dataBaseHelper);
+                    SingleCommonData.syncAccountList(dataBaseHelper);
 
                     int index = SingleCommonData.getAccountList().indexOf(currentAccount);
                     dataBaseHelper.deleteOneAccount(index);

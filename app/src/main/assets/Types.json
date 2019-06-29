@@ -36,11 +36,6 @@
       "typeImg": "img_lingshi"
     },
     {
-      "id": "8",
-      "typeName": "其他",
-      "typeImg": "img_qita"
-    },
-    {
       "id": "9",
       "typeName": "生活用品",
       "typeImg": "img_shenghuoyongpin"
@@ -74,6 +69,11 @@
       "id": "15",
       "typeName": "转账",
       "typeImg": "img_zhuanzhang"
+    },
+    {
+      "id": "8",
+      "typeName": "其他",
+      "typeImg": "img_qita"
     }
   ],
   "incomeTypes": [
@@ -81,11 +81,6 @@
       "id": "4",
       "typeName": "红包",
       "typeImg": "img_hongbao"
-    },
-    {
-      "id": "8",
-      "typeName": "其他",
-      "typeImg": "img_qita"
     },
     {
       "id": "16",
@@ -116,6 +111,11 @@
       "id": "21",
       "typeName": "投资",
       "typeImg": "img_touzi"
+    },
+    {
+      "id": "8",
+      "typeName": "其他",
+      "typeImg": "img_qita"
     }
   ],
   "accountTypes": [

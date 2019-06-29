@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class TypeRankBean{
 
-    private TypeViewBean typeView;
+    private final TypeViewBean typeView;
     private float ratio;    // [0,1]
-    private float number;   // 具体数据
+    private final float number;   // 具体数据
 
     public TypeRankBean(@NotNull TypeViewBean typeViewBean, float ratio, float number) {
         this.typeView = typeViewBean;

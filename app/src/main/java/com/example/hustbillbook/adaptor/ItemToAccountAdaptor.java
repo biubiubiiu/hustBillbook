@@ -14,12 +14,14 @@ import com.example.hustbillbook.TreeNode;
 import com.example.hustbillbook.bean.TypeViewBean;
 import com.example.hustbillbook.tools.ImageUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class ItemToAccountAdaptor extends ArrayAdapter<TreeNode> {
 
-    private int resourceId;
-    private Context mContext;
+    private final int resourceId;
+    private final Context mContext;
 
     public ItemToAccountAdaptor(Context context, int textViewResourceId, List<TreeNode> objects){
         super(context, textViewResourceId, objects);
@@ -27,9 +29,10 @@ public class ItemToAccountAdaptor extends ArrayAdapter<TreeNode> {
         resourceId = textViewResourceId;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent){
+    @NotNull
+    public View getView(int position, View convertView, @NotNull ViewGroup parent){
         TreeNode treeNode = getItem(position);
-        View view = null;
+        View view;
 
         if (treeNode.isParent){ //是父节点
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);

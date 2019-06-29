@@ -21,9 +21,9 @@ import java.util.List;
 
 public class AccountRecycleAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private AppCompatActivity mContext;
-    private LayoutInflater mInflater;
-    private List<AccountBean> mData;
+    private final AppCompatActivity mContext;
+    private final LayoutInflater mInflater;
+    private final List<AccountBean> mData;
 
     private AccountRecycleAdaptor.OnClickListener mListener;
 
@@ -87,11 +87,11 @@ public class AccountRecycleAdaptor extends RecyclerView.Adapter<RecyclerView.Vie
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        CardView cardView;
-        ImageView accountImage;
-        TextView accountName;
-        TextView accountNote;
-        TextView accountMoney;
+        final CardView cardView;
+        final ImageView accountImage;
+        final TextView accountName;
+        final TextView accountNote;
+        final TextView accountMoney;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,9 +113,9 @@ public class AccountRecycleAdaptor extends RecyclerView.Adapter<RecyclerView.Vie
 
     class ViewHolder_add extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        CardView cardView;
-        ImageView accountImage;
-        TextView accountName;
+        final CardView cardView;
+        final ImageView accountImage;
+        final TextView accountName;
 
         public ViewHolder_add(@NonNull View itemView) {
             super(itemView);
