@@ -24,7 +24,6 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DataBaseHelper mDataBaseHelper;
     private RecordRecycleAdaptor mAdapter;
 
     @Override
@@ -34,29 +33,21 @@ public class MainActivity extends AppCompatActivity {
 
         SingleCommonData.initData(this);
 
-        mDataBaseHelper = new DataBaseHelper(this);
-
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         RecyclerView recordList = findViewById(R.id.rv_main);
 
-        /*
-         * Modified On 29/06
-         */
         mAdapter = new RecordRecycleAdaptor(this, SingleCommonData.getRecordList());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setSmoothScrollbarEnabled(true);
+//        layoutManager.setSmoothScrollbarEnabled(true);
         recordList.setLayoutManager(layoutManager);
-        recordList.setHasFixedSize(true);
-        recordList.setItemAnimator(new DefaultItemAnimator());
+//        recordList.setHasFixedSize(true);
+//        recordList.setItemAnimator(new DefaultItemAnimator());
         recordList.setAdapter(mAdapter);
 
-        /*
-         * Modified On 29/06
-         */
         mAdapter.setOnClickListener(new RecordRecycleAdaptor.OnClickListener() {
             @Override
-            // 单击修改记录
+            // 单击修改记录，跳转到下一活动
             public void OnClick(final int index) {
                 Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
                 intent.putExtra("handleType", 3);
@@ -73,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mDataBaseHelper.deleteOneRecord(index);
                         SingleCommonData.removeRecord(index);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -83,15 +73,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 添加新记录
+        // 添加新记录，跳转到下一活动
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
-                //----------------------------------------------------------------------------------------
                 intent.putExtra("handleType", 1);//对应第一种情况，简单的添加
-                //-----------------------------------------------------------------------------------------
                 startActivity(intent);
             }
         });

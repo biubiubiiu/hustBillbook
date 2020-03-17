@@ -15,7 +15,9 @@ public class TreeNode {
 
     //子节点对应的参数
     public RecordBean record;//一条记录
-    public int numInDatabase;//方便从数据库中删除
+    /*modified on 6/30*/
+    //子节点的这个属性将被删除，直接使用indexOf方法
+    //public int numInDatabase;//方便从数据库中删除
     public boolean visible;//是否展示
 
     public TreeNode(String mon, String exp, String inc){
@@ -26,10 +28,10 @@ public class TreeNode {
         this.income = inc;
     }
 
-    public TreeNode(RecordBean r, int i){
+    public TreeNode(RecordBean r){
         this.isParent = false;
         this.record = r;
-        this.numInDatabase = i;
+        //this.numInDatabase = i;
         this.visible = true;//初始时可见
     }
 }

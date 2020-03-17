@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.hustbillbook.DataBaseHelper;
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.DataRepository;
@@ -39,17 +39,14 @@ import java.util.Objects;
 
 public class AddRecordActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //----------------------------------------------------------------------------------------------
     private int handleType; //三种情况下的处理，
     //1，简单的添加，执行原操作即可
-    //2，对应账户下的修改，此时账户为不可选择
+    //2，对应账户下的添加，此时账户为不可选择
     //3，对原记录的修改，需要将原记录内容复现
+    //4,对应账户下的修改，需同时将原内容复现和账户设为不可选
+    /*modified on 6/30*/
 
     private int accountNum; //记录属于哪个账户
-    /*
-     * Modified On 29/06
-     */
-    //--------------------------------------------------------------------------------------------------
 
     private boolean isExpense;
 
@@ -75,8 +72,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private List<View> viewList;
     private int selectedType;    // 记录所选择的类别;
 
-    private DataBaseHelper mDataBaseHelper;
-
     private final int SPAN_COUNT = 4;   // viewpager 中一行显示的分类个数
     private final int ITEMS_PER_PAGE = SPAN_COUNT * 3; // viewpager 中一页显示的类别个数
     private final int MAX_INTEGER_LENGTH = 8;   // 输入金额中，整数部分的最大长度
@@ -90,7 +85,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         initHandleType();
         initData();
         initMapping();
-        initDataBaseHelper();
         initStatus();
         initWidget();
     }
@@ -104,10 +98,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     protected void onStart() {
         super.onStart();
         initViewPager();
-    }
-
-    private void initDataBaseHelper() {
-        mDataBaseHelper = new DataBaseHelper(this);
     }
 
     /*
@@ -142,30 +132,32 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void initWidget() {
         // 默认选择“消费”页的第一个分类
         typeTv.setText(expenseTypeList.get(0).getTypeName());
-        // 为组件绑定动作监听器
-        initAction();
 
         switch (handleType) {
             case 1:
-                AccountBean initAccount = SingleCommonData.getAccountList().get(0);//获取第一个账户
+                AccountBean initAccount = SingleCommonData.accountAt(0);//获取第一个账户
                 accountTv.setText(initAccount.accountName);
                 accountNum = 0;
                 break;
             case 2:
                 accountNum = Objects.requireNonNull(getIntent().getExtras()).getInt("accountNum", 0);
-                accountTv.setText(SingleCommonData.getAccountList().get(accountNum).accountName);
+                accountTv.setText(SingleCommonData.accountAt(accountNum).accountName);
                 break;
+            /*modified on 6/30*/
+            case 4:     //第四种情况，直接使用case3的代码
             case 3:
                 int index = getIntent().getIntExtra("index", 0);
                 RecordBean recordBean = SingleCommonData.recordAt(index);
 
                 accountNum = recordBean.recordAccount;
-                accountTv.setText(SingleCommonData.getAccountList().get(accountNum).accountName);
+                accountTv.setText(SingleCommonData.accountAt(accountNum).accountName);
+
+                isExpense = recordBean.isExpense;
+                setStatus();
 
                 moneyTv.setText(recordBean.recordMoney);
-
-                DataRepository r = DataRepository.getInstance();
-                typeTv.setText(r.findType(recordBean.recordType).getTypeName());
+                typeTv.setText(DataRepository.getInstance().findType(recordBean.recordType).getTypeName());//TODO
+                selectedType = recordBean.recordType;
                 titleEt.setText(recordBean.recordTitle);
 
                 String today = CalendarUtils.getCurrentDate();
@@ -174,10 +166,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 else
                     dateTv.setText(recordBean.recordDate);
 
-                isExpense = recordBean.isExpense;
-
                 break;
         }
+        initAction();
     }
 
     /*
@@ -296,10 +287,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             expenseTv.setSelected(true);
             incomeTv.setSelected(false);
             typeList = expenseTypeList;
+            selectedType = 1;
+            typeTv.setText(DataRepository.getInstance().findType(selectedType).getTypeName());
         } else {
             expenseTv.setSelected(false);
             incomeTv.setSelected(true);
             typeList = incomeTypeList;
+            selectedType = 4;
+            typeTv.setText(DataRepository.getInstance().findType(selectedType).getTypeName());
         }
     }
 
@@ -373,31 +368,66 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             return;
         }
 
-        RecordBean recordBean = new RecordBean();
-        recordBean.recordType = selectedType;
-        recordBean.recordMoney = moneyTv.getText().toString();
-        recordBean.recordTitle = titleEt.getText().toString();
-        recordBean.isExpense = isExpense;
-        //------------------------------------------------------------------------------------------
-        recordBean.recordAccount = accountNum;
-        //------------------------------------------------------------------------------------------
+        int index;
+        RecordBean newRecord = new RecordBean();
+
+        newRecord.recordType = selectedType;
+        newRecord.recordMoney = moneyTv.getText().toString();
+        newRecord.recordTitle = titleEt.getText().toString();
+        newRecord.isExpense = isExpense;
+        newRecord.recordAccount = accountNum;
         if (dateTv.getText().toString().equals("今天")) {
-            recordBean.recordDate = CalendarUtils.getCurrentDate();
+            newRecord.recordDate = CalendarUtils.getCurrentDate();
         } else {
-            recordBean.recordDate = dateTv.getText().toString();
+            newRecord.recordDate = dateTv.getText().toString();
         }
 
-        //TODO 将记录写入数据库，接着处理对应账户余额
-        if (handleType != 3) {  // 新增记录
-            mDataBaseHelper.insertRecord(recordBean);
-            SingleCommonData.addRecord(recordBean);
-        } else {    // 修改已有记录
-            int index = getIntent().getIntExtra("index", 0);
-            // TODO 调用 databasehelper 的update 方法
+        /*modified on 6/30*/
+        if (handleType < 3) {  // 新增记录,对应1，2种情况
+            SingleCommonData.addRecord(newRecord);
+            index = SingleCommonData.getRecordList().indexOf(newRecord);
+        } else {
+            index = getIntent().getIntExtra("index", -1);
+            RecordBean oldRecord = SingleCommonData.recordAt(index);
+
+            /*modified on 6/30*/
+            //处理余额时先恢复旧纪录的钱，再算新纪录的钱
+            String s = SingleCommonData.accountAt(accountNum).accountMoney;
+            Double d;
+            if (oldRecord.isExpense)
+                d = Double.valueOf(s) + Double.valueOf(oldRecord.recordMoney);
+            else
+                d = Double.valueOf(s) - Double.valueOf(oldRecord.recordMoney);
+            SingleCommonData.updateAccountMoney(accountNum, d);
+
+            SingleCommonData.updateRecord(oldRecord, newRecord);
         }
-        //------------------------------------------------------------------------------------------
+
+        //处理账户余额
+        String aM = SingleCommonData.accountAt(accountNum).accountMoney;//账户余额
+        double leftMoney;
+        if (newRecord.isExpense)
+            leftMoney = Double.valueOf(aM) - Double.valueOf(newRecord.recordMoney);
+        else
+            leftMoney = Double.valueOf(aM) + Double.valueOf(newRecord.recordMoney);
+
+        SingleCommonData.updateAccountMoney(accountNum, leftMoney);
 
         Toast.makeText(this, "记账成功！", Toast.LENGTH_SHORT).show();
+
+        /*modified on 6/30*/
+        Intent intent = new Intent();
+        //int in = SingleCommonData.getRecordList().indexOf(newRecord);
+        intent.putExtra("index", index);
+        //传回新纪录的index，防止用到
+
+        if (handleType == 2 || handleType == 4) {
+            Intent intent1 = new Intent();
+            intent1.putExtra("index", index);
+
+            setResult(RESULT_OK, intent);
+        }
+
         this.finish();
     }
 
@@ -419,7 +449,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void switchAccount() {
-        if (handleType == 2)
+        /*modified on 6/30*/
+        if (handleType == 2 || handleType == 4)
             return;
         Intent intent = new Intent(AddRecordActivity.this, SelectAccountActivity.class);
         startActivityForResult(intent, 1);
@@ -471,10 +502,27 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             if (resultCode == Activity.RESULT_OK && data != null) {
                 int position = data.getIntExtra("position", 0);
                 accountTv.setText(SingleCommonData.accountAt(position).accountName);
-                //----------------------------------------------------------------------------------
                 accountNum = position;
-                //----------------------------------------------------------------------------------
             }
         }
     }
+
+    /*modified on 6/30*/
+    //因为ViewSpecific需要接受一个参数，所以处理一下返回键
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK && (handleType == 2 || handleType == 4)){
+            Intent intent = new Intent();
+            if (handleType == 2)
+                setResult(RESULT_CANCELED);
+            else{
+                int index = getIntent().getIntExtra("index", -1);
+                intent.putExtra("index", index);
+                setResult(RESULT_CANCELED, intent);
+            }
+            this.finish();
+        }
+
+        return true;
+    }
+
 }

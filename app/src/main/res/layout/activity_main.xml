@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
+            android:nestedScrollingEnabled="true"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
             app:contentScrim="@color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -47,9 +48,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="none"
-        android:overScrollMode="ifContentScrolls"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn=".behavior.TranslucentBehavior">
 

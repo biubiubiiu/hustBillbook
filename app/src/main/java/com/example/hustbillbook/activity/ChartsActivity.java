@@ -89,8 +89,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
         generateWeekChart();
 
         // 按类型合并记录，存放到两个 list 中
-        resetRankData();
-        initViewPager();
+        resetRank();
 
         // 必须在 viewPager 设置 adaptor 后使用
         mTabTl.setupWithViewPager(viewPager);
@@ -144,7 +143,6 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
     private void initViewPager() {
         LayoutInflater inflater = this.getLayoutInflater(); // 获得一个视图管理器
 
-        // TODO 考虑使用 Fragment 以提高性能
         List<View> viewList = new ArrayList<>();   //创建一个存放view的集合对象
 
         for (int i = 0; i < 2; i++) {
@@ -389,6 +387,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                 if (currentPage != Page.Month) {
                     currentPage = Page.Month;
                     generateChart();
+                    resetRank();
                 }
                 monthTv.setSelected(true);
                 break;
@@ -396,6 +395,7 @@ public class ChartsActivity extends AppCompatActivity implements View.OnClickLis
                 if (currentPage != Page.Year) {
                     currentPage = Page.Year;
                     generateChart();
+                    resetRank();
                 }
                 yearTv.setSelected(true);
                 break;

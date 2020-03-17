@@ -17,6 +17,16 @@ public class AccountBean {
     public String accountMoney;
     public String accountTitle;
 
+    public AccountBean() {
+    }
+
+    public AccountBean(String accountName, int accountType, String accountMoney, String accountTitle) {
+        this.accountName = accountName;
+        this.accountType = accountType;
+        this.accountMoney = accountMoney;
+        this.accountTitle = accountTitle;
+    }
+
     public enum Type {
         CHUXUKA(50),
         XINYONGKA(51),
@@ -60,5 +70,25 @@ public class AccountBean {
             default:
                 return "";
         }
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null)
+            return false;
+
+        if (this == obj)
+            return true;
+
+        if (obj instanceof AccountBean){
+            AccountBean a = (AccountBean)obj;
+            if (this.accountName.equals(a.accountName)
+                && this.accountTitle.equals(a.accountTitle)
+                && this.accountMoney.equals(a.accountMoney)
+                && this.accountType == a.accountType)
+                return true;
+            return false;
+        }
+        return false;
     }
 }

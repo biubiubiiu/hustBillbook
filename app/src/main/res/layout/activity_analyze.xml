@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/tv_week_selector"
-        android:text="@string/day"
+        android:text="@string/week"
         android:textColor="@drawable/tv_text_selector"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/toolbar"

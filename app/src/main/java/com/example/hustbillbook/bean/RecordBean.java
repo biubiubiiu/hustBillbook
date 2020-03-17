@@ -18,4 +18,25 @@ public class RecordBean {
     public String recordMoney;
     public int recordAccount;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+
+        if (this == obj)
+            return true;
+
+        if (obj instanceof RecordBean){
+            RecordBean r = (RecordBean)obj;
+            if (this.isExpense == r.isExpense
+                && this.recordAccount == r.recordAccount
+                && this.recordMoney.equals(r.recordMoney)
+                && this.recordType == r.recordType
+                && this.recordTitle.equals(r.recordTitle)
+                && this.recordDate.equals(r.recordDate))
+                return true;
+            return false;
+        }
+        return false;
+    }
 }

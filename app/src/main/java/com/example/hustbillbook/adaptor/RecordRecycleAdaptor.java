@@ -59,14 +59,10 @@ public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdap
         holder.mTvRecordType_text.setText(typeViewBean.getTypeName());
 
         holder.mTvRecordTitle.setText(bean.recordTitle);
-
-        //显示时在前面加正负号
-        //------------------------------------------------------------------------------------------
         if (bean.isExpense)
             holder.mTcRecordMoney.setText(mContext.getString(R.string.negative_number, bean.recordMoney));
         else
             holder.mTcRecordMoney.setText(mContext.getString(R.string.positive_number, bean.recordMoney));
-        //------------------------------------------------------------------------------------------
     }
 
     @Override
@@ -102,9 +98,6 @@ public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdap
             mListener.OnClick(getAdapterPosition());
         }
 
-        /*
-        * Modified On 29/06
-        */
         @Override
         public boolean onLongClick(View view) {
             mListener.OnLongClick(getAdapterPosition());
@@ -112,9 +105,6 @@ public class RecordRecycleAdaptor extends RecyclerView.Adapter<RecordRecycleAdap
         }
     }
 
-    /*
-     * Modified On 29/06
-     */
     public interface OnClickListener {
         void OnClick(int index);
 

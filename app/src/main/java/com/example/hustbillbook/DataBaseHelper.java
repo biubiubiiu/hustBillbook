@@ -12,6 +12,7 @@ import com.example.hustbillbook.bean.RecordBean;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     // 账单数据表 header
+    public static final String INC_ID = "inc_id";
     public static final String RECORD_TYPE = "record_type";
     public static final String RECORD_TITLE = "record_title";
     public static final String RECORD_DATE = "record_date"; // 格式: yy-mm-dd
@@ -71,7 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     //新建一个账户
-    public void insertAccount(AccountBean accountBean){
+    public void insertAccount(AccountBean accountBean) {
         SQLiteDatabase database = getWritableDatabase();
 
         ContentValues cv = new ContentValues();
@@ -83,8 +84,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.insert(ACCOUNT_TABLE, null, cv);
     }
 
-    // 查询所有记录
-    public Cursor getAllRecords() {
+    // 查询排序后记录
+    public Cursor getSortedRecords() {
         SQLiteDatabase database = getWritableDatabase();
 
         // SELECT * FROM record_table ORDER BY record_date ASC
@@ -97,8 +98,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 RECORD_DATE + " ASC");    // 此处应当有空格，否则应用将无法启动
     }
 
-    // 查询所有账户
-    public Cursor getAllAccounts(){
+    // 查询排序后账户
+    public Cursor getSortedAccounts() {
         SQLiteDatabase database = getWritableDatabase();
 
         // SELECT * FROM account_table ORDER BY account_id ASC
@@ -130,14 +131,58 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     //删除数据库中的一个账户
-    public void deleteOneAccount(int id){
+    public void deleteOneAccount(int id) {
         SQLiteDatabase database = getWritableDatabase();
-
+        /*modified on 6/30*/
+        id -= 1;
         //先删除该账户下的所有记录
-        database.execSQL("DELETE FROM " + RECORD_TABLE + " WHERE record_account= " + id);
+        database.execSQL("DELETE FROM " + RECORD_TABLE + " WHERE record_account=" + id);
 
+        id += 1;
         //再在账户表中删除该账户
         database.execSQL("DELETE FROM " + ACCOUNT_TABLE + " WHERE account_id= " + id);
+    }
+
+
+    //更新账户余额
+    public void updateAccountMoney(int index, String moneyLeft) {
+        SQLiteDatabase database = getWritableDatabase();
+
+        database.execSQL("UPDATE account_table SET account_money='" + moneyLeft + "' WHERE account_id= " + index);
+    }
+
+    //更新账户信息
+    public void updateAccountInfo(String name, String money, String note, int id) {
+        SQLiteDatabase database = getWritableDatabase();
+
+        database.execSQL("UPDATE account_table SET account_name='" + name +
+                "', account_money='" + money +
+                "', account_title='" + note +
+                "' WHERE account_id = " + id);
+
+    }
+
+    //更新记录信息
+    public void updateRecordInfo(String recordDate,
+                                 String recordMoney,
+                                 String recordTitle,
+                                 boolean isExpense,
+                                 int recordType,
+                                 int recordAccount,
+                                 int id) {
+
+        if (id >= 0) {
+            SQLiteDatabase database = getWritableDatabase();
+
+            database.execSQL("UPDATE record_table SET record_date='" + recordDate +
+                    "', record_money='" + recordMoney +
+                    "', record_title='" + recordTitle +
+                    "', record_isExpense='" + isExpense +
+                    "', record_type= " + recordType +
+                    ", record_account= " + recordAccount +
+                    " WHERE inc_id= " + id);
+
+        }
     }
 
     @Override

@@ -125,7 +125,7 @@
         android:textColor="@color/white"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@id/toolbar_inViewSpecificAccount"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="@id/toolbar_inViewSpecificAccount"
         app:layout_constraintTop_toTopOf="@id/toolbar_inViewSpecificAccount"
         app:layout_constraintBottom_toBottomOf="@id/toolbar_inViewSpecificAccount"

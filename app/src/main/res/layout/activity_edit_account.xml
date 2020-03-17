@@ -98,6 +98,26 @@
         tools:text="100.0" />
 
     <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/zhanghubeizhu"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/et_new_accoutBalance" />
+
+    <EditText
+        android:id="@+id/et_new_accountNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/et_frame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_note"
+        app:layout_constraintTop_toBottomOf="@id/tv_note"
+        tools:text="@string/beizhu" />
+
+    <TextView
         android:id="@+id/tv_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

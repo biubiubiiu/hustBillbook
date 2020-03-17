@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hustbillbook.DataBaseHelper;
 import com.example.hustbillbook.R;
 import com.example.hustbillbook.SingleCommonData;
 import com.example.hustbillbook.bean.AccountBean;
@@ -24,7 +23,6 @@ public class AddAccountActivity extends AppCompatActivity implements View.OnClic
     //设置账户金额整数部分最大8位，小数部分最大2位
 
     private Toast toast;
-    private DataBaseHelper dataBaseHelper;
 
     private EditText accName;
     private EditText accMoney;
@@ -104,9 +102,6 @@ public class AddAccountActivity extends AppCompatActivity implements View.OnClic
                     accountBean.accountMoney = money;
                     accountBean.accountTitle = note;
                     accountBean.accountType = type;
-
-                    dataBaseHelper = new DataBaseHelper(AddAccountActivity.this);
-                    dataBaseHelper.insertAccount(accountBean);
 
                     SingleCommonData.addAccount(accountBean);
 
